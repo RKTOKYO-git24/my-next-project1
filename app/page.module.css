@@ -1,44 +1,37 @@
 .top {
-  position: relative; /* Ensure that the image is positioned relative to this container */
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: rgba(0, 0, 0, 0.5);
   color: #fff;
-  overflow: hidden; /* To prevent the image from overflowing the container */
+  overflow: hidden;
   padding: 200px 0;
 }
 
 .title {
-  /* position: relative; /* Keep the title in the normal document flow */
-  /* z-index: 1; /* Ensure text is above the image */
   font-size: 3rem;
   font-weight: bold;
-  /* color: white; /* Adjust color as needed */
   text-align: center;
   margin-bottom: 1rem;
 }
 
 .description {
-  /* position: relative; /* Keep description in the normal document flow */
-  /* z-index: 1; /* Ensure description is above the image */
-  /*font-size: 1.25rem;
-  /* color: white; /* Adjust color as needed */
   text-align: center;
 }
 
 .bgimg {
-  position: absolute; /* Take the image out of the normal flow */
+  position: absolute;
   top: 0;
-  left: 0;
+  right: 0;
   width: 100%;
   height: 600px;
-  object-fit: cover; /* Ensure the image covers the container */
+  object-fit: cover;
   object-position: right;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: -1; /* Make sure the image stays behind the text */
+  z-index: -1;
 }
 
 .news {
@@ -64,7 +57,6 @@
   .top {
     padding: 120px 16px;
   }
-
   .title {
     font-size: 2rem;
     text-align: left;
@@ -90,7 +82,7 @@
   }
 
   .news {
-    width: calc(100% -32px);
+    width: calc(100% - 32px);
     padding: 16px 24px;
   }
 
