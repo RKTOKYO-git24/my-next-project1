@@ -7,3 +7,4 @@ type Props = {
 export default function Category({ category }: Props) {
   return <span className={styles.tag}>{category.name}</span>;
 }
+/* 途中（1/04 */
