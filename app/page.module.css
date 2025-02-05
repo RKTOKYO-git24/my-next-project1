@@ -53,6 +53,20 @@
   bottom: -40px;
 }
 
+.case {
+  position: relative;
+  background-color: #1a0463;
+  width: 840px;
+  margin: 100px auto 0;
+  padding: 24px 40px;
+  color: #fff;
+  border-radius: var(--border-radius);
+}
+
+.caseTitle {
+  font-size: 3rem;
+}
+
 @media (max-width: 640px) {
   .top {
     padding: 120px 16px;

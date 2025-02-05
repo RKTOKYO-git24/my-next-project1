@@ -36,6 +36,10 @@ export default async function Home() {
           <ButtonLink href="/news">もっとみる</ButtonLink>
         </div>
       </section>
+
+      <section className={styles.case}>
+        <h2 className={styles.caseTitle}>ケーススタディ</h2>
+      </section>
     </>
   );
 }
