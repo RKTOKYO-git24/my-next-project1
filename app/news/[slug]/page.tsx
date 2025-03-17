@@ -4,14 +4,22 @@ import Article from "@/app/_components/Article";
 import ButtonLink from "@/app/_components/ButtonLink";
 import styles from "./page.module.css";
 
-// Fix: `PageProps` should be properly typed as Next.js expects
-interface PageProps {
+// Next.js 15 requires generating static params or data fetching using new methods
+export async function generateStaticParams() {
+  const slugs = await getNewsDetail(); // Or fetch all slugs or relevant dynamic routes
+  return slugs.map((slug) => ({
+    slug: slug, // Adjust this as per your data structure
+  }));
+}
+
+// Page component now receives params in the correct structure
+type Props = {
   params: {
     slug: string;
   };
-}
+};
 
-export async function generateMetadata({ params }: PageProps) {
+export async function generateMetadata({ params }: Props) {
   const data = await getNewsDetail(params.slug).catch(() => null);
 
   if (!data) {
@@ -26,11 +34,11 @@ export async function generateMetadata({ params }: PageProps) {
   };
 }
 
-export default async function Page({ params }: PageProps) {
+export default async function Page({ params }: Props) {
   const data = await getNewsDetail(params.slug).catch(notFound);
 
   if (!data) {
-    return null; // Handle this as an empty state or fallback
+    return null; // Fallback or 404
   }
 
   return (
