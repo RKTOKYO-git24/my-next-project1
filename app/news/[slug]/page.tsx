@@ -4,35 +4,33 @@ import Article from "@/app/_components/Article";
 import ButtonLink from "@/app/_components/ButtonLink";
 import styles from "./page.module.css";
 
-type Props = {
+// Fix: `PageProps` should be properly typed as Next.js expects
+interface PageProps {
   params: {
     slug: string;
   };
-};
+}
 
-// If you're using server-side rendering (SSR) and fetching data on the server-side
-export async function generateMetadata({ params }: Props) {
+export async function generateMetadata({ params }: PageProps) {
   const data = await getNewsDetail(params.slug).catch(() => null);
 
   if (!data) {
     return {
-      notFound: true, // Use the notFound flag if data is missing
+      notFound: true,
     };
   }
 
-  // Set dynamic metadata if the data exists (optional, if you need dynamic meta tags)
   return {
     title: data.title,
     description: data.description,
   };
 }
 
-export default async function Page({ params }: Props) {
-  const data = await getNewsDetail(params.slug).catch(notFound); // Use notFound to return 404 if data is missing
+export default async function Page({ params }: PageProps) {
+  const data = await getNewsDetail(params.slug).catch(notFound);
 
   if (!data) {
-    // Optional: Add additional handling for missing data here
-    return null;
+    return null; // Handle this as an empty state or fallback
   }
 
   return (
