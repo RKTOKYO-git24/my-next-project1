@@ -22,7 +22,7 @@ export default function Pagination({ totalCount, current = 1 }: Props) {
                 {p}
               </Link>
             ) : (
-              <span className={`${styles.item}${styles.current}`}>{p}</span>
+              <span className={`${styles.item} ${styles.current}`}>{p}</span>
             )}
           </li>
         ))}
