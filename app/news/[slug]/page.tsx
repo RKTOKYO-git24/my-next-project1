@@ -4,21 +4,14 @@ import Article from "@/app/_components/Article";
 import ButtonLink from "@/app/_components/ButtonLink";
 import styles from "./page.module.css";
 
-// Next.js 15 requires generating static params or data fetching using new methods
-export async function generateStaticParams() {
-  const slugs = await getNewsDetail(); // Or fetch all slugs or relevant dynamic routes
-  return slugs.map((slug) => ({
-    slug: slug, // Adjust this as per your data structure
-  }));
-}
-
-// Page component now receives params in the correct structure
+// The params are automatically passed in the component by Next.js for dynamic routes
 type Props = {
   params: {
-    slug: string;
+    slug: string; // `slug` will be passed dynamically based on your URL structure
   };
 };
 
+// Generate Metadata (Optional, for SEO/meta tags)
 export async function generateMetadata({ params }: Props) {
   const data = await getNewsDetail(params.slug).catch(() => null);
 
@@ -34,11 +27,12 @@ export async function generateMetadata({ params }: Props) {
   };
 }
 
+// Page Component where dynamic params (slug) are passed automatically
 export default async function Page({ params }: Props) {
-  const data = await getNewsDetail(params.slug).catch(notFound);
+  const data = await getNewsDetail(params.slug).catch(notFound); // Fetch data based on the slug
 
   if (!data) {
-    return null; // Fallback or 404
+    return null; // Show fallback or error state
   }
 
   return (
