@@ -10,9 +10,30 @@ type Props = {
   };
 };
 
+// If you're using server-side rendering (SSR) and fetching data on the server-side
+export async function generateMetadata({ params }: Props) {
+  const data = await getNewsDetail(params.slug).catch(() => null);
+
+  if (!data) {
+    return {
+      notFound: true, // Use the notFound flag if data is missing
+    };
+  }
+
+  // Set dynamic metadata if the data exists (optional, if you need dynamic meta tags)
+  return {
+    title: data.title,
+    description: data.description,
+  };
+}
+
 export default async function Page({ params }: Props) {
-  // Fetch the data directly inside the component
-  const data = await getNewsDetail(params.slug).catch(() => notFound());
+  const data = await getNewsDetail(params.slug).catch(notFound); // Use notFound to return 404 if data is missing
+
+  if (!data) {
+    // Optional: Add additional handling for missing data here
+    return null;
+  }
 
   return (
     <>
