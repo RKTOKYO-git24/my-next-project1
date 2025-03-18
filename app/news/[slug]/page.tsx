@@ -4,14 +4,19 @@ import Article from "@/app/_components/Article";
 import ButtonLink from "@/app/_components/ButtonLink";
 import styles from "./page.module.css";
 
+// Correctly type the params to use Promise
 type Props = {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 };
 
 export default async function Page({ params }: Props) {
-  const data = await getNewsDetail(params.slug).catch(notFound);
+  // Ensure params is resolved properly as a Promise
+  const resolvedParams = await params;
+
+  // Fetch data based on the resolved slug
+  const data = await getNewsDetail(resolvedParams.slug).catch(notFound);
 
   return (
     <>
