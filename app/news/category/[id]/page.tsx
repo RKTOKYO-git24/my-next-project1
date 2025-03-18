@@ -4,14 +4,19 @@ import NewsList from "@/app/_components/NewsList";
 import Category from "@/app/_components/Category";
 import { NEWS_LIST_LIMIT } from "@/app/_constants";
 
+// Correctly type the params as a Promise
 type Props = {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 };
 
 export default async function Page({ params }: Props) {
-  const category = await getCAtegoryDetail(params.id).catch(notFound);
+  // Resolve the params Promise before accessing it
+  const resolvedParams = await params;
+
+  // Fetch the category details based on the resolved id
+  const category = await getCAtegoryDetail(resolvedParams.id).catch(notFound);
 
   const { contents: news } = await getNewsList({
     limit: NEWS_LIST_LIMIT,
