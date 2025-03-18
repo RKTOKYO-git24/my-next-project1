@@ -23,17 +23,17 @@ export default function Menu() {
         <ul className={styles.items}>
           <li>
             <Link href="/news" onClick={handleLinkClick}>
-              ニュース
+              NEWS
             </Link>
           </li>
           <li>
             <Link href="/members" onClick={handleLinkClick}>
-              メンバー
+              MEMBERS
             </Link>
           </li>
           <li>
             <Link href="/contact" onClick={handleLinkClick}>
-              お問い合わせ
+              CONTACT US
             </Link>
           </li>
         </ul>
