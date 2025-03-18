@@ -8,21 +8,33 @@ import styles from "./index.module.css";
 
 export default function Menu() {
   const [isOpen, setOpen] = useState<boolean>(false);
+
   const open = () => setOpen(true);
   const close = () => setOpen(false);
+
+  // Function to close the menu after clicking a link
+  const handleLinkClick = () => {
+    setOpen(false); // Close the menu when a link is clicked
+  };
 
   return (
     <div>
       <nav className={cx(styles.nav, isOpen && styles.open)}>
         <ul className={styles.items}>
           <li>
-            <Link href="/news">ニュース</Link>
+            <Link href="/news" onClick={handleLinkClick}>
+              ニュース
+            </Link>
           </li>
           <li>
-            <Link href="/members">メンバー</Link>
+            <Link href="/members" onClick={handleLinkClick}>
+              メンバー
+            </Link>
           </li>
           <li>
-            <Link href="/contact">お問い合わせ</Link>
+            <Link href="/contact" onClick={handleLinkClick}>
+              お問い合わせ
+            </Link>
           </li>
         </ul>
         <button className={cx(styles.button, styles.close)} onClick={close}>
