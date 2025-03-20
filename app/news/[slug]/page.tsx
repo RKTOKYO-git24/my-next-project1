@@ -18,8 +18,8 @@ export async function generateMetadata({
   params,
   searchParams,
 }: Props): Promise<Metadata> {
-  const data = await getNewsDetail(params.slug, {
-    draftKey: searchParams.dk,
+  const data = await getNewsDetail((await params).slug, {
+    draftKey: (await searchParams).dk,
   });
 
   return {
@@ -34,8 +34,8 @@ export async function generateMetadata({
 }
 
 export default async function Page({ params, searchParams }: Props) {
-  const data = await getNewsDetail(params.slug, {
-    draftKey: searchParams.dk,
+  const data = await getNewsDetail((await params).slug, {
+    draftKey: (await searchParams).dk,
   }).catch(notFound);
 
   return (
