@@ -4,20 +4,19 @@ import Article from "@/app/_components/Article";
 import ButtonLink from "@/app/_components/ButtonLink";
 import styles from "./page.module.css";
 
-// Correctly type the params to use Promise
+// Correctly type the params without wrapping in Promise
 type Props = {
   params: {
     slug: string;
   };
-  searchParams: {
-    dk?: string;
-  };
 };
-export default async function Page({ params, searchParams }: Props) {
-  // Ensure params is resolved properly as a Promise
-  const data = await getNewsDetail((await params).slug, {
-    draftKey: searchParams.dk,
-  }).catch(notFound);
+
+export default async function Page({ params }: Props) {
+  // No need to resolve params, it's already available
+  const { slug } = params;
+
+  // Fetch data based on the resolved slug
+  const data = await getNewsDetail(slug).catch(notFound);
 
   return (
     <>
