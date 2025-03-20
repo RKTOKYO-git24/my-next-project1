@@ -5,7 +5,7 @@ import ButtonLink from "@/app/_components/ButtonLink";
 import styles from "./page.module.css";
 import { NextPage } from "next";
 
-// Type for the page props
+// Properly type the params without a Promise
 type Props = {
   params: {
     slug: string;
