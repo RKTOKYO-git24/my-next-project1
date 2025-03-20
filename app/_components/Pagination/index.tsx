@@ -5,6 +5,7 @@ import styles from "./index.module.css";
 type Props = {
   totalCount: number;
   current?: number;
+  basePath?: string;
 };
 
 export default function Pagination({
