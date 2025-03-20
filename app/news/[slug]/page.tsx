@@ -3,20 +3,18 @@ import { getNewsDetail } from "@/app/_libs/microcms";
 import Article from "@/app/_components/Article";
 import ButtonLink from "@/app/_components/ButtonLink";
 import styles from "./page.module.css";
+import { NextPage } from "next";
 
-// Correctly type the params without wrapping in Promise
+// Type for the page props
 type Props = {
   params: {
     slug: string;
   };
 };
 
-export default async function Page({ params }: Props) {
-  // No need to resolve params, it's already available
-  const { slug } = params;
-
-  // Fetch data based on the resolved slug
-  const data = await getNewsDetail(slug).catch(notFound);
+const Page: NextPage<Props> = async ({ params }) => {
+  // Fetch data based on the slug in params
+  const data = await getNewsDetail(params.slug).catch(notFound);
 
   return (
     <>
@@ -26,4 +24,6 @@ export default async function Page({ params }: Props) {
       </div>
     </>
   );
-}
+};
+
+export default Page;
