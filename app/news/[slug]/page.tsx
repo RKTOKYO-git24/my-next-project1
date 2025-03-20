@@ -6,12 +6,12 @@ import ButtonLink from "@/app/_components/ButtonLink";
 import styles from "./page.module.css";
 
 type Props = {
-  params: {
+  params: Promise<{
     slug: string;
-  };
-  searchParams: {
+  }>;
+  searchParams: Promise<{
     dk?: string;
-  };
+  }>;
 };
 
 export async function generateMetadata({
