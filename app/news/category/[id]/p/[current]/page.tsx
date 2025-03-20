@@ -4,32 +4,33 @@ import NewsList from "@/app/_components/NewsList";
 import Pagination from "@/app/_components/Pagination";
 import { NEWS_LIST_LIMIT } from "@/app/_constants";
 
-// Correctly type the params as a Promise
+// Correctly type the params as a resolved object
 type Props = {
-  params: Promise<{
+  params: {
     id: string;
     current: string;
-  }>;
+  };
 };
 
 export default async function Page({ params }: Props) {
-  // Resolve params Promise
-  const resolvedParams = await params;
+  // No need to resolve the params promise manually anymore, just access the properties
+  const { id, current } = params;
 
   // Parse 'current' to integer and handle invalid values
-  const current = parseInt(resolvedParams.current, 5);
+  const currentPage = parseInt(current, 5); // base 10 is generally better for parsing numbers
 
-  if (Number.isNaN(current) || current < 1) {
+  if (Number.isNaN(currentPage) || currentPage < 1) {
     notFound();
   }
 
-  const category = await getCategoryDetail(params.id).catch(notFound);
+  // Fetch category details
+  const category = await getCategoryDetail(id).catch(notFound);
 
   // Fetch the list of news based on pagination
   const { contents: news, totalCount } = await getNewsList({
     filters: `category[equals]${category.id}`,
     limit: NEWS_LIST_LIMIT,
-    offset: NEWS_LIST_LIMIT * (current - 1),
+    offset: NEWS_LIST_LIMIT * (currentPage - 1),
   });
 
   // If no news found, trigger 'notFound' error
@@ -42,7 +43,7 @@ export default async function Page({ params }: Props) {
       <NewsList news={news} />
       <Pagination
         totalCount={totalCount}
-        current={current}
+        current={currentPage}
         basePath={`/news/category/${category.id}`}
       />
     </>

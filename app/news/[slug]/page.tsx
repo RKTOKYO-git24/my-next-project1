@@ -9,14 +9,16 @@ type Props = {
   params: Promise<{
     slug: string;
   }>;
+  searchParams: {
+    dk?: string;
+  };
 };
 
-export default async function Page({ params }: Props) {
+export default async function Page({ params, searchParams }: Props) {
   // Ensure params is resolved properly as a Promise
-  const resolvedParams = await params;
-
-  // Fetch data based on the resolved slug
-  const data = await getNewsDetail(resolvedParams.slug).catch(notFound);
+  const data = await getNewsDetail((await params).slug, {
+    draftKey: searchParams.dk,
+  }).catch(notFound);
 
   return (
     <>
