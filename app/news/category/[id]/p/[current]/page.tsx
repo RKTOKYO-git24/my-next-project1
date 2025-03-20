@@ -6,15 +6,16 @@ import { NEWS_LIST_LIMIT } from "@/app/_constants";
 
 // Correctly type the params as a resolved object
 type Props = {
-  params: {
+  params: Promise<{
     id: string;
     current: string;
-  };
+  }>;
 };
 
 export default async function Page({ params }: Props) {
   // No need to resolve the params promise manually anymore, just access the properties
-  const { id, current } = params;
+
+  const { id, current } = await params;
 
   // Parse 'current' to integer and handle invalid values
   const currentPage = parseInt(current, 5); // base 10 is generally better for parsing numbers
