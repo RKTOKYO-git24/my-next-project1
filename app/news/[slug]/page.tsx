@@ -5,16 +5,16 @@ import ButtonLink from "@/app/_components/ButtonLink";
 import styles from "./page.module.css";
 import { NextPage } from "next";
 
-// Properly type the params without a Promise
+// Keep Promise wrap for params
 type Props = {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 };
 
 const Page: NextPage<Props> = async ({ params }) => {
-  // Fetch data based on the slug in params
-  const data = await getNewsDetail(params.slug).catch(notFound);
+  // Directly await the promise when using params
+  const data = await getNewsDetail((await params).slug).catch(notFound);
 
   return (
     <>
