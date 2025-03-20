@@ -1,37 +1,48 @@
-import { getCategoryDetail, getNewsList } from "@/app/_libs/microcms";
 import { notFound } from "next/navigation";
+import { getCategoryDetail, getNewsList } from "@/app/_libs/microcms";
 import NewsList from "@/app/_components/NewsList";
 import Pagination from "@/app/_components/Pagination";
-import Category from "@/app/_components/Category";
 import { NEWS_LIST_LIMIT } from "@/app/_constants";
 
 // Correctly type the params as a Promise
 type Props = {
   params: Promise<{
     id: string;
+    current: string;
   }>;
 };
 
 export default async function Page({ params }: Props) {
-  // Resolve the params Promise before accessing it
+  // Resolve params Promise
   const resolvedParams = await params;
 
-  // Fetch the category details based on the resolved id
-  const category = await getCategoryDetail(resolvedParams.id).catch(notFound);
+  // Parse 'current' to integer and handle invalid values
+  const current = parseInt(resolvedParams.current, 5);
 
+  if (Number.isNaN(current) || current < 1) {
+    notFound();
+  }
+
+  const category = await getCategoryDetail(params.id).catch(notFound);
+
+  // Fetch the list of news based on pagination
   const { contents: news, totalCount } = await getNewsList({
-    limit: NEWS_LIST_LIMIT,
     filters: `category[equals]${category.id}`,
+    limit: NEWS_LIST_LIMIT,
+    offset: NEWS_LIST_LIMIT * (current - 1),
   });
+
+  // If no news found, trigger 'notFound' error
+  if (news.length === 0) {
+    notFound();
+  }
 
   return (
     <>
-      <p>
-        <Category category={category} /> の一覧
-      </p>
       <NewsList news={news} />
       <Pagination
         totalCount={totalCount}
+        current={current}
         basePath={`/news/category/${category.id}`}
       />
     </>

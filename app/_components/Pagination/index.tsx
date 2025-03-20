@@ -7,7 +7,11 @@ type Props = {
   current?: number;
 };
 
-export default function Pagination({ totalCount, current = 1 }: Props) {
+export default function Pagination({
+  totalCount,
+  current = 1,
+  basePath = "/news",
+}: Props) {
   const pages = Array.from(
     { length: Math.ceil(totalCount / NEWS_LIST_LIMIT) },
     (_, i) => i + 1
@@ -18,7 +22,7 @@ export default function Pagination({ totalCount, current = 1 }: Props) {
         {pages.map((p) => (
           <li className={styles.list} key={p}>
             {current !== p ? (
-              <Link href={`/news/p/${p}`} className={styles.item}>
+              <Link href={`${basePath}/p/${p}`} className={styles.item}>
                 {p}
               </Link>
             ) : (
