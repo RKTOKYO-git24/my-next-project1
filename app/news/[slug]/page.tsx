@@ -5,7 +5,7 @@ import Article from "@/app/_components/Article";
 import ButtonLink from "@/app/_components/ButtonLink";
 import styles from "./page.module.css";
 
-export const revalidate = 0;
+export const revalidate = 60;
 
 type Props = {
   params: Promise<{
