@@ -27,7 +27,7 @@ export default async function Page({ params }: Props) {
   return (
     <>
       <p>
-        <Category category={category} /> の一覧
+        List of <Category category={category} />
       </p>
       <NewsList news={news} />
       <Pagination

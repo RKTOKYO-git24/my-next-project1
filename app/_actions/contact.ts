@@ -20,37 +20,37 @@ export async function createContactData(
   if (!rawFormData.lastname) {
     return {
       status: "error",
-      message: "姓を入力してください",
+      message: "ENTER Your Last Name.",
     };
   }
   if (!rawFormData.firstname) {
     return {
       status: "error",
-      message: "名を入力してください",
+      message: "Enter Your First Name",
     };
   }
   if (!rawFormData.company) {
     return {
       status: "error",
-      message: "会社名を入力してください",
+      message: "Enter Your Company Name",
     };
   }
   if (!rawFormData.email) {
     return {
       status: "error",
-      message: "メールアドレスを入力してください",
+      message: "Enter Your Email Address",
     };
   }
   if (!validateEmail(rawFormData.email)) {
     return {
       status: "error",
-      message: "メールアドレスの形式が誤っています",
+      message: "Email address format is incorrect.",
     };
   }
   if (!rawFormData.message) {
     return {
       status: "error",
-      message: "メッセージを入力してください",
+      message: "Enter Your Message",
     };
   }
 
@@ -99,7 +99,7 @@ export async function createContactData(
     console.log(e);
     return {
       status: "error",
-      message: "お問い合わせに失敗しました",
+      message: "Inquiry failed.",
     };
   }
 
