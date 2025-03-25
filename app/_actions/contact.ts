@@ -25,7 +25,7 @@ export async function createContactData(
   }
   if (!rawFormData.firstname) {
     return {
-      satus: "error",
+      status: "error",
       message: "名を入力してください",
     };
   }
@@ -55,7 +55,7 @@ export async function createContactData(
   }
 
   const result = await fetch(
-    "https://api.hsforms.com/submissions/v3/intergration/submit/${process.env.HUBSPOT_PORTAL_ID}/${process.env.HUBSPOT_FORM_ID}",
+    `https://api.hsforms.com/submissions/v3/intergration/submit/${process.env.HUBSPOT_PORTAL_ID}/${process.env.HUBSPOT_FORM_ID}`,
     {
       method: "POST",
       headers: {
@@ -103,5 +103,5 @@ export async function createContactData(
     };
   }
 
-  return { status: "sccess", message: "OK" };
+  return { status: "success", message: "OK" };
 }
