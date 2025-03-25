@@ -109,12 +109,12 @@
   }
 
   .Capa {
-    padding: 120px 16px;
+    padding: 20px 16px;
     width: auto;
   }
   .caseTitle {
     font-size: 1rem;
-    text-align: left;
+    text-align: top;
     width: auto;
   }
 }
