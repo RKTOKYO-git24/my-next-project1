@@ -53,18 +53,19 @@
   bottom: -40px;
 }
 
-.case {
+.Capa {
   position: relative;
   background-color: #1a0463;
   width: 840px;
-  margin: 100px auto 0;
+  height: 600px;
+  margin: 140px auto 0;
   padding: 24px 40px;
   color: #fff;
   border-radius: var(--border-radius);
 }
 
 .caseTitle {
-  font-size: 3rem;
+  font-size: 1.5rem;
 }
 
 @media (max-width: 640px) {
@@ -72,7 +73,7 @@
     padding: 120px 16px;
   }
   .title {
-    font-size: 2rem;
+    font-size: 1rem;
     text-align: left;
   }
 

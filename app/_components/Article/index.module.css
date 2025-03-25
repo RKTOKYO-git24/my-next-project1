@@ -1,6 +1,6 @@
 .title {
-  font-size: 2.4rem;
-  margin-bottom: 24px;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
   text-align: left;
 }
 
@@ -162,7 +162,7 @@
 @media (max-width: 640px) {
   .title {
     font-size: 1.5rem;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
   }
 
   .description {
