@@ -14,7 +14,7 @@ export function middleware(request: NextRequest) {
 
   if (!hostname || !allowedHosts.includes(hostname)) {
     // .vercelappなど → Googleにリダイレクト
-    return NextResponse.redirect("https://www/google.com");
+    return NextResponse.redirect("https://www.google.com");
 
     // .vercel.appなどからのアクセスを拒否
     // return new Response("403 - Access Denied", { status: 403 });
