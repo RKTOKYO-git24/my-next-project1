@@ -1,7 +1,7 @@
 .header {
   position: sticky;
   top: 0;
-  background-color: black;
+  background-color: rgba(0, 0, 0, 0.6);
   padding: 16px 24px 8px;
   z-index: 1000;
   display: flex;

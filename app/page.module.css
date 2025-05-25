@@ -3,10 +3,30 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(0, 0, 0, 0.5);
   color: #fff;
   overflow: hidden;
   padding: 200px 0;
+}
+
+.bgimgWrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 600px;
+  z-index: -10;
+  overflow: hidden;
+}
+
+.bgimg {
+  object-fit: cover;
+  object-position: center;
+  z-index: -10;
+}
+
+.topContent {
+  position: relative;
+  z-index: 1;
 }
 
 .title {
@@ -18,20 +38,6 @@
 
 .description {
   text-align: center;
-}
-
-.bgimg {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 100%;
-  height: 600px;
-  object-fit: cover;
-  object-position: right;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: -1;
 }
 
 .news {
@@ -72,28 +78,15 @@
   .top {
     padding: 120px 16px;
   }
+
   .title {
     font-size: 1rem;
     text-align: left;
   }
 
   .description {
-    text-align: center;
     font-size: 0.9rem;
     text-align: left;
-  }
-
-  .bgimg {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: auto;
-    height: 600px;
-    object-fit: cover;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: -1;
   }
 
   .news {
@@ -112,9 +105,9 @@
     padding: 20px 16px;
     width: auto;
   }
+
   .caseTitle {
     font-size: 1rem;
-    text-align: top;
     width: auto;
   }
 }
