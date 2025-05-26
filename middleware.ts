@@ -19,6 +19,8 @@ const publicPathsToBypassAuth = [
 // カスタムmiddlewareラッパー
 export function middleware(request: NextRequest) {
   const hostname = request.headers.get("host");
+  const pathname = request.nextUrl.pathname;
+
   const isDev =
     hostname?.startsWith("localhost") || process.env.NODE_ENV === "development";
 
