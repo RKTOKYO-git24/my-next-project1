@@ -43,3 +43,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Windows metadata
+*.Zone.Identifier
+Thumbs.db
+ehthumbs.db
+Desktop.ini
