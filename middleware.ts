@@ -5,11 +5,27 @@ import { createNextAuthMiddleware } from "nextjs-basic-auth-middleware";
 // 元のBASIC認証ミドルウェア
 const basicAuthMiddleware = createNextAuthMiddleware();
 
+// ✅ favicon系ファイルを除外したいパス
+const publicPathsToBypassAuth = [
+  "/favicon.ico",
+  "/apple-touch-icon.png",
+  "/favicon-16x16.png",
+  "/favicon-32x32.png",
+  "/android-chrome-192x192.png",
+  "/android-chrome-512x512.png",
+  "/site.webmanifest",
+];
+
 // カスタムmiddlewareラッパー
 export function middleware(request: NextRequest) {
   const hostname = request.headers.get("host");
   const isDev =
     hostname?.startsWith("localhost") || process.env.NODE_ENV === "development";
+
+  // ✅ faviconやmanifestなどは認証をスキップ
+  if (publicPathsToBypassAuth.includes(pathname)) {
+    return NextResponse.next();
+  }
 
   // 許可するドメインだけを明示
   const allowedHosts = ["ryotkim.com", "www.ryotkim.com"];
