@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@next/third-parties": "^15.4.0-canary.51",
     "@vercel/analytics": "^1.5.0",
     "classnames": "^2.5.1",
     "dayjs": "^1.11.10",
@@ -16,6 +17,7 @@
     "next": "^15.2.2",
     "nextjs-basic-auth-middleware": "^3.1.0",
     "react": "^19.0.0",
+    "react-cookie-consent": "^9.0.0",
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
