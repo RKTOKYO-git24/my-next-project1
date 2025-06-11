@@ -1,0 +1,10 @@
+services:
+  nextjs:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - ./.env.local:/app/.env.local:ro
+    environment:
+      - NODE_ENV=development
