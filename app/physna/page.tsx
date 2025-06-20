@@ -2,15 +2,24 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
+
+// 1. 型定義
+interface PhysnaItem {
+  id: string;
+  name: string;
+  thumbnailUrl?: string;
+  folder?: {
+    name: string;
+  };
+}
 
 export default function PhysnaPage() {
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<any[]>([]);
+  const [results, setResults] = useState<PhysnaItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [view, setView] = useState<"search" | "results">("search");
-
-  console.log("Current view:", view);
 
   const handleSearch = async () => {
     setLoading(true);
@@ -24,13 +33,13 @@ export default function PhysnaPage() {
       });
 
       const data = await res.json();
-
       if (!res.ok) throw new Error(data.error || "Unknown error");
 
       setResults(data.items || []);
       setView("results");
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -48,6 +57,7 @@ export default function PhysnaPage() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search models..."
+          onKeyDown={(e) => e.key === "Enter" && handleSearch()}
         />
         <button
           onClick={handleSearch}
@@ -75,9 +85,11 @@ export default function PhysnaPage() {
           <li key={item.id} className="border p-4 rounded shadow">
             <p className="font-semibold text-gray-800">{item.name}</p>
             {item.thumbnailUrl && (
-              <img
+              <Image
                 src={item.thumbnailUrl}
                 alt={item.name}
+                width={300}
+                height={200}
                 className="mt-2 w-full max-w-sm rounded"
               />
             )}
