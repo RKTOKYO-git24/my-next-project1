@@ -1,10 +1,19 @@
 services:
   nextjs:
     build: .
-    ports:
-      - "3000:3000"
     volumes:
       - .:/app
-      - ./.env.local:/app/.env.local:ro
+
+    ports:
+      - "3000:3000"
     environment:
       - NODE_ENV=development
+    restart: unless-stopped  # ←★自動起動させたいなら必須
+
+  #db:
+  # image: mysql:8
+  #  environment:
+  #    MYSQL_ROOT_PASSWORD: password
+  #  ports:
+  #    - "53306:3306"
+  #  # restart: unless-stopped  ←★MySQLは重複起動の原因にもなるので、あえて自動起動なしでもOK
