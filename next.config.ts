@@ -1,16 +1,19 @@
-import { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
+// next.config.js
+module.exports = {
   images: {
     remotePatterns: [
       {
         protocol: "https",
+        hostname: "cdn.physna.com",
+      },
+      {
+        protocol: "https",
         hostname: "images.microcms-assets.io",
+      },
+      {
+        protocol: "https",
+        hostname: "storage.googleapis.com", //
       },
     ],
   },
 };
-
-export default nextConfig;
-
-/** .mjs codes described in github have been changed for .ts here */

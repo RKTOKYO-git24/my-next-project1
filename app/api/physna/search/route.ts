@@ -27,7 +27,17 @@ export async function POST(request: Request) {
     }
 
     const data = await res.json();
-    return NextResponse.json({ items: data.models || [] });
+      console.log("Physna API response:", data); 
+    // 👇 thumbnail_url → thumbnailUrl に変換
+    const items = (data.models || []).map((model: any) => ({
+      id: model.id,
+      name: model.name,
+      thumbnailUrl: model.thumbnail ?? null,
+      folder: model.folder ?? null,
+    }));
+
+    return NextResponse.json({ items });
+
   } catch (err: unknown) {
     // 型ガードでError型かどうかをチェック
     const message = err instanceof Error ? err.message : String(err);

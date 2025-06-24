@@ -86,9 +86,13 @@ export default function PhysnaPage() {
  <ul className="space-y-4">
   {results.map((item, index) => {
     const id = item?.id?.toString?.() ?? `no-id-${index}`;
+  
+     console.log("thumbnailUrl:", item.thumbnailUrl);
+  
     return (
       <li key={id} className="border p-4 rounded shadow">
         <p className="font-semibold text-gray-800">{item.name ?? "No name"}</p>
+
         {item.thumbnailUrl && (
           <Image
             src={item.thumbnailUrl}
