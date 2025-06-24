@@ -29,11 +29,22 @@ export async function POST(request: Request) {
     const data = await res.json();
       console.log("Physna API response:", data); 
     // 👇 thumbnail_url → thumbnailUrl に変換
-    const items = (data.models || []).map((model: any) => ({
+
+   type PhysnaModel = {
+  id: string;
+  name: string;
+  thumbnail: string;
+  folder: string;
+  description?: string;
+  // 必要に応じて追加
+};
+
+const items = (data.models || []).map((model: PhysnaModel) => ({
       id: model.id,
       name: model.name,
       thumbnailUrl: model.thumbnail ?? null,
       folder: model.folder ?? null,
+      description: model.description ?? '',
     }));
 
     return NextResponse.json({ items });
