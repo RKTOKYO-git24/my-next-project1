@@ -33,6 +33,8 @@ export default function PhysnaPage() {
       });
 
       const data = await res.json();
+      console.log("Fetched data", data);
+      
       if (!res.ok) throw new Error(data.error || "Unknown error");
 
       setResults(data.items || []);
@@ -80,27 +82,32 @@ export default function PhysnaPage() {
         ← Back to search
       </button>
       <h2 className="text-xl font-bold mb-4">Search Results</h2>
-      <ul className="space-y-4">
-        {results.map((item) => (
-          <li key={item.id} className="border p-4 rounded shadow">
-            <p className="font-semibold text-gray-800">{item.name}</p>
-            {item.thumbnailUrl && (
-              <Image
-                src={item.thumbnailUrl}
-                alt={item.name}
-                width={300}
-                height={200}
-                className="mt-2 w-full max-w-sm rounded"
-              />
-            )}
-            {item.folder && (
-              <p className="text-sm text-gray-600 mt-1">
-                Folder: {item.folder.name}
-              </p>
-            )}
-          </li>
-        ))}
-      </ul>
+
+ <ul className="space-y-4">
+  {results.map((item, index) => {
+    const id = item?.id?.toString?.() ?? `no-id-${index}`;
+    return (
+      <li key={id} className="border p-4 rounded shadow">
+        <p className="font-semibold text-gray-800">{item.name ?? "No name"}</p>
+        {item.thumbnailUrl && (
+          <Image
+            src={item.thumbnailUrl}
+            alt={item.name ?? "image"}
+            width={300}
+            height={200}
+            className="mt-2 w-full max-w-sm rounded"
+          />
+        )}
+        {item.folder?.name && (
+          <p className="text-sm text-gray-600 mt-1">
+            Folder: {item.folder.name}
+          </p>
+        )}
+      </li>
+    );
+  })}
+</ul>
+
     </div>
   );
 }
