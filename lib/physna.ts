@@ -22,26 +22,35 @@ export async function getAccessToken(): Promise<string> {
   //}).toString());
 
   const res = await fetch(process.env.PHYSNA_TOKEN_ENDPOINT!, {
-    method: "POST",
-    headers: {
-      Authorization: `Basic ${basicAuth}`,
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    body: new URLSearchParams({
-      grant_type: "client_credentials",
-      scope: process.env.PHYSNA_SCOPES!,
-    }),
-  });
+  method: "POST",
+  headers: {
+    Authorization: `Basic ${basicAuth}`,
+    "Content-Type": "application/x-www-form-urlencoded",
+  },
+  body: new URLSearchParams({
+    grant_type: "client_credentials",
+    scope: process.env.PHYSNA_SCOPES!,
+  }),
+});
 
-  const text = await res.text();
+const text = await res.text();
 //console.log("🔑 Raw token response:", text);
+console.log("🔍 Raw response text:", text); // 👈 これ追加
+const contentType = res.headers.get("content-type");
 
-  if (!res.ok) {
-    throw new Error(`Failed to obtain access token: ${res.status} - ${text}`);
-  }
+if (!res.ok || !contentType || !contentType.includes("application/json")) {
+  throw new Error(`❌ Failed to obtain access token (non-JSON): ${res.status}\n${text}`);
+}
 
-  const json = JSON.parse(text);
-  cachedToken = json.access_token;
-  tokenExpiry = now + (json.expires_in - 60) * 1000;
-  return cachedToken!;
+let json;
+try {
+  json = JSON.parse(text);
+} catch (err) {
+  throw new Error(`❌ JSON parse failed: ${err}\nRaw response: ${text}`);
+}
+
+cachedToken = json.access_token;
+tokenExpiry = now + (json.expires_in * 1000) - 10_000; // 10秒前に再取得
+
+return cachedToken!; // ✅ ここで全経路カバー
 }

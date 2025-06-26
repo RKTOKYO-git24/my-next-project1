@@ -52,7 +52,7 @@ export default function PhysnaPage() {
       <div className="p-6 bg-white min-h-screen">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-green-700 mb-2">Physna Search</h1>
-          <p className="text-gray-600">これはトライアル画面です。</p>
+          <p className="text-gray-600">This is a prototype interface for internal evaluation and feedback.</p>
         </div>
         <input
           className="border p-2 mr-2 w-64"
@@ -97,7 +97,7 @@ export default function PhysnaPage() {
           <Image
             src={item.thumbnailUrl}
             alt={item.name ?? "image"}
-            width={300}
+            width={200}
             height={200}
             className="mt-2 w-full max-w-sm rounded"
           />
