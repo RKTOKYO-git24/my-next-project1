@@ -69,12 +69,13 @@ export default function PhysnaPage() {
       >
         ← Back to search
       </button>
+            
       <h2 className="text-xl font-bold mb-4">Search Results</h2>
 
       <div className="overflow-x-auto">
         <table className="w-full table-auto border-collapse">
           <thead>
-            <tr className="bg-gray-100 text-sm text-left text-gray-700">
+            <tr className="bg-[#d1fae5] text-sm text-left text-gray-700">
               <th className="px-4 py-2">Thumbnail</th>
               <th className="px-4 py-2">Name</th>
               <th className="px-4 py-2">File Name</th>
