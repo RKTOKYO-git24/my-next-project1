@@ -28,21 +28,24 @@ export async function POST(request: Request) {
     }
 
     const data = await res.json();
-    console.log("Physna API response:", data);
+console.log("Physna API response:", data);
 
-    const items: PhysnaItem[] = (data.models || []).map((model: any) => ({
-      id: model.id,
-      name: model.name,
-      thumbnailUrl: model.thumbnail ?? null,
-      fileName: model.fileName ?? null,
-      fileType: model.fileType ?? null,
-      createdAt: model.createdAt ?? null,
-      isAssembly: model.isAssembly ?? null,
-      units: model.units ?? null,
-      state: model.state ?? null,
-      geometry: model.geometry ?? null,
-      folder: model.folder ?? null,
-    }));
+// ここで型アサーション（as）を使って明示的に型を指定
+const models = data.models as PhysnaItem[];
+
+const items: PhysnaItem[] = (models || []).map((model) => ({
+  id: model.id,
+  name: model.name,
+  thumbnailUrl: model.thumbnailUrl ?? null,
+  fileName: model.fileName ?? null,
+  fileType: model.fileType ?? null,
+  createdAt: model.createdAt ?? null,
+  isAssembly: model.isAssembly ?? null,
+  units: model.units ?? null,
+  state: model.state ?? null,
+  geometry: model.geometry ?? null,
+  folder: model.folder ?? null,
+}));
 
     return NextResponse.json({ items });
 
