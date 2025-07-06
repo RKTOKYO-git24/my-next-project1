@@ -23,8 +23,6 @@ export default function PhysnaPage() {
       });
 
       const data = await res.json();
-      console.log("Fetched data", data);
-
       if (!res.ok) throw new Error(data.error || "Unknown error");
 
       setResults(data.items || []);
@@ -40,10 +38,10 @@ export default function PhysnaPage() {
   if (view === "search") {
     return (
       <div className="p-6 bg-white min-h-screen">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-green-700 mb-2">Physna Search</h1>
-          <p className="text-gray-600">This is a prototype interface for internal evaluation and feedback.</p>
-        </div>
+        <h1 className="text-3xl font-bold text-green-700 mb-4">Physna Search</h1>
+        <p className="text-gray-600 mb-6">
+          This is a prototype interface for internal evaluation and feedback.
+        </p>
         <input
           className="border p-2 mr-2 w-64"
           value={query}
@@ -73,86 +71,66 @@ export default function PhysnaPage() {
       </button>
       <h2 className="text-xl font-bold mb-4">Search Results</h2>
 
-      <ul className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {results.map((item, index) => {
-          const id = item?.id?.toString?.() ?? `no-id-${index}`;
-
-          return (
-            <li key={id} className="border rounded-xl shadow p-4 bg-gray-50">
-              <h3 className="text-lg font-semibold text-green-800 mb-2">
-                {item.name ?? "No name"}
-              </h3>
-
-              {item.thumbnailUrl && (
-                <Image
-                  src={item.thumbnailUrl}
-                  alt={item.name ?? "image"}
-                  width={200}
-                  height={200}
-                  className="rounded mb-4"
-                />
-              )}
-
-              {/* Model File Data */}
-              <div className="mb-2">
-                <p className="text-sm text-gray-700">
-                  <span className="font-semibold">File:</span> {item.fileName ?? "—"}
-                </p>
-                <p className="text-sm text-gray-700">
-                  <span className="font-semibold">Type:</span> {item.fileType ?? "—"}
-                </p>
-                <p className="text-sm text-gray-700">
-                  <span className="font-semibold">Created:</span>{" "}
+      <div className="overflow-x-auto">
+        <table className="w-full table-auto border-collapse">
+          <thead>
+            <tr className="bg-gray-100 text-sm text-left text-gray-700">
+              <th className="px-4 py-2">Thumbnail</th>
+              <th className="px-4 py-2">Name</th>
+              <th className="px-4 py-2">File Name</th>
+              <th className="px-4 py-2">File Type</th>
+              <th className="px-4 py-2">Created</th>
+              <th className="px-4 py-2">Assembly</th>
+              <th className="px-4 py-2">Units</th>
+              <th className="px-4 py-2">State</th>
+              <th className="px-4 py-2">Surface Area</th>
+              <th className="px-4 py-2">Volume</th>
+              <th className="px-4 py-2">Max Length</th>
+              <th className="px-4 py-2">Folder</th>
+            </tr>
+          </thead>
+          <tbody>
+            {results.map((item, index) => (
+              <tr key={item.id || index} className="border-b text-sm">
+                <td className="px-4 py-2">
+                  {item.thumbnailUrl ? (
+                    <Image
+                      src={item.thumbnailUrl}
+                      alt="thumbnail"
+                      width={80}
+                      height={80}
+                      className="rounded"
+                    />
+                  ) : (
+                    "—"
+                  )}
+                </td>
+                <td className="px-4 py-2">{item.name || "—"}</td>
+                <td className="px-4 py-2">{item.fileName || "—"}</td>
+                <td className="px-4 py-2">{item.fileType || "—"}</td>
+                <td className="px-4 py-2">
                   {item.createdAt
-                    ? new Date(item.createdAt).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                      })
+                    ? new Date(item.createdAt).toLocaleDateString()
                     : "—"}
-                </p>
-              </div>
-
-              {/* Model Types */}
-              <div className="mb-2">
-                <p className="text-sm text-gray-700">
-                  <span className="font-semibold">Assembly:</span>{" "}
-                  {item.isAssembly ? "Yes" : "No"}
-                </p>
-                <p className="text-sm text-gray-700">
-                  <span className="font-semibold">Units:</span> {item.units ?? "—"}
-                </p>
-                <p className="text-sm text-gray-700">
-                  <span className="font-semibold">State:</span> {item.state ?? "—"}
-                </p>
-              </div>
-
-              {/* Geometrical Data */}
-              <div className="mb-2">
-                {item.geometry?.surfaceArea && (
-                  <p className="text-sm text-gray-700">
-                    <span className="font-semibold">Surface Area:</span>{" "}
-                    {item.geometry.surfaceArea.toFixed(2)} mm²
-                  </p>
-                )}
-                {item.geometry?.modelVolume && (
-                  <p className="text-sm text-gray-700">
-                    <span className="font-semibold">Volume:</span>{" "}
-                    {item.geometry.modelVolume.toFixed(2)} mm³
-                  </p>
-                )}
-              </div>
-
-              {/* Folder */}
-              {item.folder?.name && (
-                <p className="text-sm text-gray-500 italic">
-                  Folder: {item.folder.name}
-                </p>
-              )}
-            </li>
-          );
-        })}
-      </ul>
+                </td>
+                <td className="px-4 py-2">{item.isAssembly ? "Yes" : "No"}</td>
+                <td className="px-4 py-2">{item.units || "—"}</td>
+                <td className="px-4 py-2">{item.state || "—"}</td>
+                <td className="px-4 py-2">
+                  {item.geometry?.surfaceArea?.toFixed(2) || "—"} mm²
+                </td>
+                <td className="px-4 py-2">
+                  {item.geometry?.modelVolume?.toFixed(2) || "—"} mm³
+                </td>
+                <td className="px-4 py-2">
+                  {item.geometry?.obbMaxLength?.toFixed(2) || "—"} mm
+                </td>
+                <td className="px-4 py-2">{item.folder?.name || "—"}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

@@ -1,4 +1,5 @@
-FROM node:20-alpine
+# Dockerfile
+FROM node:20
 
 WORKDIR /app
 
@@ -8,5 +9,4 @@ RUN npm install
 COPY . .
 
 EXPOSE 3000
-
 CMD ["npm", "run", "dev"]
