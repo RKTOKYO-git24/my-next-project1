@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getAccessToken } from "@/lib/physna";
+import { PhysnaItem } from "@/types/physna"; // ✅ 型定義のインポート
 
 export async function POST(request: Request) {
   try {
@@ -27,30 +28,25 @@ export async function POST(request: Request) {
     }
 
     const data = await res.json();
-      console.log("Physna API response:", data); 
-    // 👇 thumbnail_url → thumbnailUrl に変換
+    console.log("Physna API response:", data);
 
-   type PhysnaModel = {
-  id: string;
-  name: string;
-  thumbnail: string;
-  folder: string;
-  description?: string;
-  // 必要に応じて追加
-};
-
-const items = (data.models || []).map((model: PhysnaModel) => ({
+    const items: PhysnaItem[] = (data.models || []).map((model: any) => ({
       id: model.id,
       name: model.name,
       thumbnailUrl: model.thumbnail ?? null,
+      fileName: model.fileName ?? null,
+      fileType: model.fileType ?? null,
+      createdAt: model.createdAt ?? null,
+      isAssembly: model.isAssembly ?? null,
+      units: model.units ?? null,
+      state: model.state ?? null,
+      geometry: model.geometry ?? null,
       folder: model.folder ?? null,
-      description: model.description ?? '',
     }));
 
     return NextResponse.json({ items });
 
   } catch (err: unknown) {
-    // 型ガードでError型かどうかをチェック
     const message = err instanceof Error ? err.message : String(err);
     return NextResponse.json(
       { error: `Unexpected error: ${message}` },

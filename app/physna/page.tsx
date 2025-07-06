@@ -1,18 +1,8 @@
-// app/physna/page.tsx
 "use client";
 
 import { useState } from "react";
 import Image from "next/image";
-
-// 1. 型定義
-interface PhysnaItem {
-  id: string;
-  name: string;
-  thumbnailUrl?: string;
-  folder?: {
-    name: string;
-  };
-}
+import { PhysnaItem } from "@/types/physna";
 
 export default function PhysnaPage() {
   const [query, setQuery] = useState("");
@@ -34,7 +24,7 @@ export default function PhysnaPage() {
 
       const data = await res.json();
       console.log("Fetched data", data);
-      
+
       if (!res.ok) throw new Error(data.error || "Unknown error");
 
       setResults(data.items || []);
@@ -83,35 +73,86 @@ export default function PhysnaPage() {
       </button>
       <h2 className="text-xl font-bold mb-4">Search Results</h2>
 
- <ul className="space-y-4">
-  {results.map((item, index) => {
-    const id = item?.id?.toString?.() ?? `no-id-${index}`;
-  
-     console.log("thumbnailUrl:", item.thumbnailUrl);
-  
-    return (
-      <li key={id} className="border p-4 rounded shadow">
-        <p className="font-semibold text-gray-800">{item.name ?? "No name"}</p>
+      <ul className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {results.map((item, index) => {
+          const id = item?.id?.toString?.() ?? `no-id-${index}`;
 
-        {item.thumbnailUrl && (
-          <Image
-            src={item.thumbnailUrl}
-            alt={item.name ?? "image"}
-            width={200}
-            height={200}
-            className="mt-2 w-full max-w-sm rounded"
-          />
-        )}
-        {item.folder?.name && (
-          <p className="text-sm text-gray-600 mt-1">
-            Folder: {item.folder.name}
-          </p>
-        )}
-      </li>
-    );
-  })}
-</ul>
+          return (
+            <li key={id} className="border rounded-xl shadow p-4 bg-gray-50">
+              <h3 className="text-lg font-semibold text-green-800 mb-2">
+                {item.name ?? "No name"}
+              </h3>
 
+              {item.thumbnailUrl && (
+                <Image
+                  src={item.thumbnailUrl}
+                  alt={item.name ?? "image"}
+                  width={200}
+                  height={200}
+                  className="rounded mb-4"
+                />
+              )}
+
+              {/* Model File Data */}
+              <div className="mb-2">
+                <p className="text-sm text-gray-700">
+                  <span className="font-semibold">File:</span> {item.fileName ?? "—"}
+                </p>
+                <p className="text-sm text-gray-700">
+                  <span className="font-semibold">Type:</span> {item.fileType ?? "—"}
+                </p>
+                <p className="text-sm text-gray-700">
+                  <span className="font-semibold">Created:</span>{" "}
+                  {item.createdAt
+                    ? new Date(item.createdAt).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      })
+                    : "—"}
+                </p>
+              </div>
+
+              {/* Model Types */}
+              <div className="mb-2">
+                <p className="text-sm text-gray-700">
+                  <span className="font-semibold">Assembly:</span>{" "}
+                  {item.isAssembly ? "Yes" : "No"}
+                </p>
+                <p className="text-sm text-gray-700">
+                  <span className="font-semibold">Units:</span> {item.units ?? "—"}
+                </p>
+                <p className="text-sm text-gray-700">
+                  <span className="font-semibold">State:</span> {item.state ?? "—"}
+                </p>
+              </div>
+
+              {/* Geometrical Data */}
+              <div className="mb-2">
+                {item.geometry?.surfaceArea && (
+                  <p className="text-sm text-gray-700">
+                    <span className="font-semibold">Surface Area:</span>{" "}
+                    {item.geometry.surfaceArea.toFixed(2)} mm²
+                  </p>
+                )}
+                {item.geometry?.modelVolume && (
+                  <p className="text-sm text-gray-700">
+                    <span className="font-semibold">Volume:</span>{" "}
+                    {item.geometry.modelVolume.toFixed(2)} mm³
+                  </p>
+                )}
+              </div>
+
+              {/* Folder */}
+              {item.folder?.name && (
+                <p className="text-sm text-gray-500 italic">
+                  Folder: {item.folder.name}
+                </p>
+              )}
+            </li>
+          );
+        })}
+      </ul>
     </div>
   );
 }
