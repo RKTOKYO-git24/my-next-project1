@@ -1,3 +1,5 @@
+// /api/physna/search/route.ts
+
 import { NextResponse } from "next/server";
 import { getAccessToken } from "@/lib/physna";
 import { PhysnaItem } from "@/types/physna"; // ✅ 型定義のインポート
@@ -31,20 +33,20 @@ export async function POST(request: Request) {
 console.log("Physna API response:", data);
 
 // ここで型アサーション（as）を使って明示的に型を指定
-const models = data.models as PhysnaItem[];
+const models: PhysnaModel[] = data.models ?? [];
 
-const items: PhysnaItem[] = (models || []).map((model) => ({
+const items: PhysnaItem[] = models.map((model) => ({
   id: model.id,
   name: model.name,
-  thumbnailUrl: model.thumbnailUrl ?? null,
-  fileName: model.fileName ?? null,
-  fileType: model.fileType ?? null,
-  createdAt: model.createdAt ?? null,
-  isAssembly: model.isAssembly ?? null,
-  units: model.units ?? null,
-  state: model.state ?? null,
-  geometry: model.geometry ?? null,
-  folder: model.folder ?? null,
+  thumbnailUrl: model.thumbnail ?? undefined,
+  fileName: model.fileName ?? undefined,
+  fileType: model.fileType ?? undefined,
+  createdAt: model.createdAt ?? undefined,
+  isAssembly: model.isAssembly ?? undefined,
+  units: model.units ?? undefined,
+  state: model.state ?? undefined,
+  geometry: model.geometry ?? undefined,
+  folder: model.folder ?? undefined,
 }));
 
     return NextResponse.json({ items });
