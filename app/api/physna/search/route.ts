@@ -2,7 +2,8 @@
 
 import { NextResponse } from "next/server";
 import { getAccessToken } from "@/lib/physna";
-import { PhysnaItem } from "@/types/physna"; // ✅ 型定義のインポート
+import { PhysnaModel, PhysnaItem } from "@/types/physna";
+
 
 export async function POST(request: Request) {
   try {
