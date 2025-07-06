@@ -87,7 +87,7 @@ export default function PhysnaPage() {
               <th className="px-4 py-2">Surface Area</th>
               <th className="px-4 py-2">Volume</th>
               <th className="px-4 py-2">Max Length</th>
-              <th className="px-4 py-2">Folder</th>
+              <th className="px-4 py-2">Folder ID</th>
             </tr>
           </thead>
           <tbody>
@@ -126,7 +126,7 @@ export default function PhysnaPage() {
                 <td className="px-4 py-2">
                   {item.geometry?.obbMaxLength?.toFixed(2) || "—"} mm
                 </td>
-                <td className="px-4 py-2">{item.folder?.name || "—"}</td>
+                <td className="px-4 py-2">{item.folderId ?? "—"}</td>
               </tr>
             ))}
           </tbody>

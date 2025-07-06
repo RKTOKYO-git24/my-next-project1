@@ -45,6 +45,7 @@ const items: PhysnaItem[] = models.map((model) => ({
   createdAt: model.createdAt ?? undefined,
   isAssembly: model.isAssembly ?? undefined,
   units: model.units ?? undefined,
+  folderId: model.folderId,
   state: model.state ?? undefined,
   geometry: model.geometry ?? undefined,
   folder: model.folder ?? undefined,

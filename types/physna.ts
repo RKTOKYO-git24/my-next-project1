@@ -1,3 +1,5 @@
+// /types/physna.ts
+
 export interface PhysnaModel {
   id: string;
   name: string;
@@ -8,6 +10,7 @@ export interface PhysnaModel {
   isAssembly?: boolean;
   units?: string;
   state?: string;
+  folderId?: number;
   geometry?: {
     surfaceArea?: number;
     modelVolume?: number;
@@ -26,6 +29,7 @@ export interface PhysnaItem {
   isAssembly?: boolean;
   units?: string;
   state?: string;
+  folderId?: number;
   geometry?: {
     surfaceArea?: number;
     modelVolume?: number;
