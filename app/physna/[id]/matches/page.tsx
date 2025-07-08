@@ -4,6 +4,14 @@ type MatchPageProps = {
   };
 };
 
+type MatchResult = {
+  matchedModel: {
+    name: string;
+    thumbnailUrl?: string;
+  };
+  matchPercentage: number;
+};
+
 export default async function MatchPage({ params }: MatchPageProps) {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_SITE_URL}/api/physna/models/${params.id}/matches`,
@@ -20,7 +28,7 @@ export default async function MatchPage({ params }: MatchPageProps) {
         <p>No matches found.</p>
       ) : (
         <ul className="space-y-4">
-          {matches.map((match: any, index: number) => (
+          {matches.map((match: MatchResult, index: number) => (
             <li key={index} className="border rounded p-4 shadow">
               <div className="flex items-center space-x-4">
                 {match.matchedModel?.thumbnailUrl && (
