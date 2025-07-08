@@ -4,14 +4,25 @@ import { createContactData } from "@/app/_actions/contact";
 import { useActionState } from "react";
 import styles from "./index.module.css";
 
-const initialState = {
+// ✅ 型を定義
+type ContactFormState = {
+  status: "" | "success" | "error";
+  message: string;
+};
+
+const initialState: ContactFormState = {
   status: "",
   message: "",
 };
 
 export default function ContactForm() {
-  const [state, formAction] = useActionState(createContactData, initialState);
+  const [state, formAction] = useActionState<ContactFormState, FormData>(
+    createContactData,
+    initialState
+  );
+
   console.log(state);
+
   if (state?.status === "success") {
     return (
       <p className={styles.success}>
