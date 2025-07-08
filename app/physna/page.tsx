@@ -69,7 +69,7 @@ export default function PhysnaPage() {
       >
         ← Back to search
       </button>
-            
+
       <h2 className="text-xl font-bold mb-4">Search Results</h2>
 
       <div className="overflow-x-auto">
@@ -100,14 +100,19 @@ export default function PhysnaPage() {
                       alt="thumbnail"
                       width={80}
                       height={80}
-                      className="rounded"
+                      className="rounded opacity-70"
+                      title="Viewer not yet available"
                     />
                   ) : (
                     "—"
                   )}
                 </td>
-                <td className="px-4 py-2">{item.name || "—"}</td>
-                <td className="px-4 py-2">{item.fileName || "—"}</td>
+                <td className="px-4 py-2">
+                  <span className="text-gray-600 italic">{item.name || "—"}</span>
+                </td>
+                <td className="px-4 py-2">
+                  <span className="text-gray-600 italic">{item.fileName || "—"}</span>
+                </td>
                 <td className="px-4 py-2">{item.fileType || "—"}</td>
                 <td className="px-4 py-2">
                   {item.createdAt
