@@ -4,8 +4,8 @@ import { createContactData } from "@/app/_actions/contact";
 import { useActionState } from "react";
 import styles from "./index.module.css";
 
-// ✅ 型を定義
-type ContactFormState = {
+// ✅ 状態型を定義
+export type ContactFormState = {
   status: "" | "success" | "error";
   message: string;
 };
@@ -21,8 +21,6 @@ export default function ContactForm() {
     initialState
   );
 
-  console.log(state);
-
   if (state?.status === "success") {
     return (
       <p className={styles.success}>
@@ -37,58 +35,28 @@ export default function ContactForm() {
     <form className={styles.form} action={formAction}>
       <div className={styles.horizontal}>
         <div className={styles.item}>
-          <label className={styles.label} htmlFor="lastname">
-            LAST NAME
-          </label>
-          <input
-            className={styles.textfield}
-            type="text"
-            id="lastname"
-            name="lastname"
-          />
+          <label className={styles.label} htmlFor="lastname">LAST NAME</label>
+          <input className={styles.textfield} type="text" id="lastname" name="lastname" />
         </div>
-
         <div className={styles.item}>
-          <label className={styles.label} htmlFor="firstname">
-            FIRST NAME
-          </label>
-          <input
-            className={styles.textfield}
-            type="text"
-            id="firstname"
-            name="firstname"
-          />
+          <label className={styles.label} htmlFor="firstname">FIRST NAME</label>
+          <input className={styles.textfield} type="text" id="firstname" name="firstname" />
         </div>
       </div>
 
       <div className={styles.item}>
-        <label className={styles.label} htmlFor="company">
-          COMPANY NAME
-        </label>
-        <input
-          className={styles.textfield}
-          type="text"
-          id="company"
-          name="company"
-        />
+        <label className={styles.label} htmlFor="company">COMPANY NAME</label>
+        <input className={styles.textfield} type="text" id="company" name="company" />
       </div>
       <div className={styles.item}>
-        <label className={styles.label} htmlFor="email">
-          EMAIL ADDRESS
-        </label>
-        <input
-          className={styles.textfield}
-          type="text"
-          id="email"
-          name="email"
-        />
+        <label className={styles.label} htmlFor="email">EMAIL ADDRESS</label>
+        <input className={styles.textfield} type="email" id="email" name="email" />
       </div>
       <div className={styles.item}>
-        <label className={styles.label} htmlFor="message">
-          MESSAGE
-        </label>
+        <label className={styles.label} htmlFor="message">MESSAGE</label>
         <textarea className={styles.textarea} id="message" name="message" />
       </div>
+
       <div className={styles.actions}>
         {state?.status === "error" && (
           <p className={styles.error}>{state.message}</p>
