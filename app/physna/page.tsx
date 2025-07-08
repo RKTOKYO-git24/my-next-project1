@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { PhysnaItem } from "@/types/physna";
 
@@ -10,6 +11,8 @@ export default function PhysnaPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [view, setView] = useState<"search" | "results">("search");
+
+  const router = useRouter();
 
   const handleSearch = async () => {
     setLoading(true);
@@ -33,6 +36,10 @@ export default function PhysnaPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleMatchClick = (modelId: string) => {
+    router.push(`/physna/${modelId}/matches`);
   };
 
   if (view === "search") {
@@ -88,11 +95,12 @@ export default function PhysnaPage() {
               <th className="px-4 py-2">Volume</th>
               <th className="px-4 py-2">Max Length</th>
               <th className="px-4 py-2">Folder ID</th>
+              <th className="px-4 py-2">Actions</th>
             </tr>
           </thead>
           <tbody>
             {results.map((item, index) => (
-              <tr key={item.id || index} className="border-b text-sm">
+              <tr key={item.id || index} className="border-b text-sm align-top">
                 <td className="px-4 py-2">
                   {item.thumbnailUrl ? (
                     <Image
@@ -107,12 +115,8 @@ export default function PhysnaPage() {
                     "—"
                   )}
                 </td>
-                <td className="px-4 py-2">
-                  <span className="text-gray-600 italic">{item.name || "—"}</span>
-                </td>
-                <td className="px-4 py-2">
-                  <span className="text-gray-600 italic">{item.fileName || "—"}</span>
-                </td>
+                <td className="px-4 py-2 text-gray-600 italic">{item.name || "—"}</td>
+                <td className="px-4 py-2 text-gray-600 italic">{item.fileName || "—"}</td>
                 <td className="px-4 py-2">{item.fileType || "—"}</td>
                 <td className="px-4 py-2">
                   {item.createdAt
@@ -132,6 +136,14 @@ export default function PhysnaPage() {
                   {item.geometry?.obbMaxLength?.toFixed(2) || "—"} mm
                 </td>
                 <td className="px-4 py-2">{item.folderId ?? "—"}</td>
+                <td className="px-4 py-2">
+                  <button
+                    className="text-xs text-blue-600 underline"
+                    onClick={() => handleMatchClick(item.id)}
+                  >
+                    matches
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>

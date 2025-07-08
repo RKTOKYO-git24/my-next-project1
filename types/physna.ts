@@ -37,3 +37,8 @@ export interface PhysnaItem {
   };
   folder?: { name: string };
 }
+
+export interface PhysnaMatch {
+  matchedModel: PhysnaItem;
+  matchPercentage: number;
+}
