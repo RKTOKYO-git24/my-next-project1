@@ -17,7 +17,11 @@ export async function GET(req: NextRequest) {
 
     const model = await modelRes.json();
     return NextResponse.json(model);
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+  } catch (err: unknown) {
+    let message = 'Unknown error';
+    if (err instanceof Error) {
+      message = err.message;
+    }
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
