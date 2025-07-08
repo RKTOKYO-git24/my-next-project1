@@ -52,7 +52,7 @@ export default function RootLayout({
           href="/favicon-16x16.png"
         />
         <link rel="icon" href="/favicon.ico" />
-        <link rel="manifest" href="/site.webmanifest" />
+        {/* <link rel="manifest" href="/site.webmanifest" /> */}
       </head>
       <body>
         <Header />
