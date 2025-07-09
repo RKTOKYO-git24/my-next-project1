@@ -1,4 +1,4 @@
-import { PhysnaMatch } from "@/types/physna";
+import { PhysnaMatch, PhysnaItem, PhysnaModel } from "@/types/physna";
 import Link from "next/link"; // サーバーでもOK（Next.js 13以降）
 
 type MatchPageProps = {
@@ -7,6 +7,11 @@ type MatchPageProps = {
   };
 };
 
+interface RawPhysnaMatch {
+  matchedModel: PhysnaModel;
+  matchPercentage: number;
+}
+
 export default async function MatchPage({ params }: MatchPageProps) {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_SITE_URL}/api/physna/models/${params.id}/matches`,
@@ -14,11 +19,11 @@ export default async function MatchPage({ params }: MatchPageProps) {
   );
   const data = await res.json();
 
-  const matches: PhysnaMatch[] = (data.matches ?? []).map((match: any) => ({
-    ...match,
+  const matches: PhysnaMatch[] = (data.matches ?? []).map((match: RawPhysnaMatch) => ({
+    matchPercentage: match.matchPercentage,
     matchedModel: {
       ...match.matchedModel,
-      thumbnailUrl: match.matchedModel.thumbnail,
+      thumbnailUrl: match.matchedModel.thumbnail ?? "", // PhysnaModelにはある
     },
   }));
 
