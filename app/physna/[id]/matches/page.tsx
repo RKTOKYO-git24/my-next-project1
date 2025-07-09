@@ -1,4 +1,4 @@
-import { PhysnaMatch, PhysnaItem, PhysnaModel } from "@/types/physna";
+import { PhysnaMatch, PhysnaModel } from "@/types/physna";
 import Link from "next/link"; // サーバーでもOK（Next.js 13以降）
 
 type MatchPageProps = {
