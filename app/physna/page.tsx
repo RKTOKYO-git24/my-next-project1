@@ -82,7 +82,7 @@ export default function PhysnaPage() {
       <div className="overflow-x-auto">
         <table className="w-full table-auto border-collapse">
           <thead>
-            <tr className="bg-[#d1fae5] text-sm text-left text-gray-700">
+            <tr className="bg-green-100 text-left">
               <th className="px-4 py-2">Thumbnail</th>
               <th className="px-4 py-2">Name</th>
               <th className="px-4 py-2">File Name</th>
@@ -115,30 +115,30 @@ export default function PhysnaPage() {
                     "—"
                   )}
                 </td>
-                <td className="px-4 py-2 text-gray-600 italic">{item.name || "—"}</td>
-                <td className="px-4 py-2 text-gray-600 italic">{item.fileName || "—"}</td>
+                <td className="px-4 py-2">{item.name || "—"}</td>
+                <td className="px-4 py-2">{item.fileName || "—"}</td>
                 <td className="px-4 py-2">{item.fileType || "—"}</td>
                 <td className="px-4 py-2">
-                  {item.createdAt
-                    ? new Date(item.createdAt).toLocaleDateString()
-                    : "—"}
+                {item.createdAt
+                  ? new Date(item.createdAt).toLocaleDateString("en-US")
+                  : "—"}
                 </td>
                 <td className="px-4 py-2">{item.isAssembly ? "Yes" : "No"}</td>
                 <td className="px-4 py-2">{item.units || "—"}</td>
                 <td className="px-4 py-2">{item.state || "—"}</td>
                 <td className="px-4 py-2">
-                  {item.geometry?.surfaceArea?.toFixed(2) || "—"} mm²
+                  {item.geometry?.surfaceArea?.toFixed(0).toLocaleString() || "—"}mm²
                 </td>
                 <td className="px-4 py-2">
-                  {item.geometry?.modelVolume?.toFixed(2) || "—"} mm³
+                  {item.geometry?.modelVolume?.toFixed(0).toLocaleString() || "—"}mm³
                 </td>
                 <td className="px-4 py-2">
-                  {item.geometry?.obbMaxLength?.toFixed(2) || "—"} mm
+                  {item.geometry?.obbMaxLength?.toFixed(0).toLocaleString() || "—"}mm
                 </td>
                 <td className="px-4 py-2">{item.folderId ?? "—"}</td>
                 <td className="px-4 py-2">
                   <button
-                    className="text-xs text-blue-600 underline"
+                    className="text-xs text-blue-600 no-underline hover:underline"
                     onClick={() => handleMatchClick(item.id)}
                   >
                     matches

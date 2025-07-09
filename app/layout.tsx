@@ -1,4 +1,5 @@
 import "./globals.css";
+import React from "react";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { Analytics } from "@vercel/analytics/next";
 import type { Metadata } from "next";
