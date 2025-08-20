@@ -41,7 +41,6 @@ export default async function MatchPage({ params }: MatchPageProps) {
             <thead>
               <tr className="bg-gray-100 text-left">
                 <th className="p-2 border">Thumbnail</th>
-                <th className="p-2 border">Name</th>
                 <th className="p-2 border">File Name</th>
                 <th className="p-2 border">File Type</th>
                 <th className="p-2 border">Created At</th>
@@ -69,7 +68,6 @@ export default async function MatchPage({ params }: MatchPageProps) {
                         <span>No image</span>
                       )}
                     </td>
-                    <td className="px-4 py-2 text-black">{model.name ?? "N/A"}</td>
                     <td className="px-4 py-2 text-black">{model.fileName ?? "N/A"}</td>
                     <td className="px-4 py-2">{model.fileType ?? "N/A"}</td>
                     <td className="p-2 border">
@@ -80,10 +78,12 @@ export default async function MatchPage({ params }: MatchPageProps) {
                     <td className="px-4 py-2">{model.isAssembly ? "Yes" : "No"}</td>
                     <td className="px-4 py-2">{model.units ?? "N/A"}</td>
                     <td className="px-4 py-2">
-                      {model.geometry?.surfaceArea?.toFixed(0).toLocaleString() ?? "N/A"}mm²
+                      {typeof model.geometry?.surfaceArea === "number"
+                        ? model.geometry.surfaceArea.toLocaleString("en-US", { maximumFractionDigits: 0 }) + "mm²" : "N/A"}
                     </td>
                     <td className="px-4 py-2">
-                      {model.geometry?.modelVolume?.toFixed(0).toLocaleString() ?? "N/A"}mm³
+                      {typeof model.geometry?.modelVolume === "number"
+                       ? model.geometry.modelVolume.toLocaleString("en-US", { maximumFractionDigits: 0 }) + "mm³" : "N/A"} 
                     </td>
                     <td className="px-4 py-2">
                       {(match.matchPercentage * 100).toFixed(0)}%

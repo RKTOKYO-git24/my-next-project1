@@ -126,15 +126,21 @@ export default function PhysnaPage() {
                 <td className="px-4 py-2">{item.isAssembly ? "Yes" : "No"}</td>
                 <td className="px-4 py-2">{item.units || "—"}</td>
                 <td className="px-4 py-2">{item.state || "—"}</td>
-                <td className="px-4 py-2">
-                  {item.geometry?.surfaceArea?.toFixed(0).toLocaleString() || "—"}mm²
-                </td>
-                <td className="px-4 py-2">
-                  {item.geometry?.modelVolume?.toFixed(0).toLocaleString() || "—"}mm³
-                </td>
-                <td className="px-4 py-2">
-                  {item.geometry?.obbMaxLength?.toFixed(0).toLocaleString() || "—"}mm
-                </td>
+<td className="px-4 py-2">
+  {Number.isFinite(item.geometry?.surfaceArea)
+    ? item.geometry.surfaceArea.toLocaleString("en-US", { maximumFractionDigits: 0 })
+    : "—"}mm²
+</td>
+<td className="px-4 py-2">
+  {Number.isFinite(item.geometry?.modelVolume)
+    ? item.geometry.modelVolume.toLocaleString("en-US", { maximumFractionDigits: 0 })
+    : "—"}mm³
+</td>
+<td className="px-4 py-2">
+  {Number.isFinite(item.geometry?.obbMaxLength)
+    ? item.geometry.obbMaxLength.toLocaleString("en-US", { maximumFractionDigits: 0 })
+    : "—"}mm
+</td>
                 <td className="px-4 py-2">{item.folderId ?? "—"}</td>
                 <td className="px-4 py-2">
                   <button
