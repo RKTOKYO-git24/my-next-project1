@@ -16,4 +16,11 @@ module.exports = {
       },
     ],
   },
+// webpackDevMiddleware: (config) => {
+//    config.watchOptions = {
+//      poll: 1000,            // 毎秒ポーリング
+//      aggregateTimeout: 300, // debounce
+//    };
+//    return config;
+//  },
 };
