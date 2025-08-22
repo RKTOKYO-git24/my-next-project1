@@ -1,20 +1,25 @@
+
 services:
   nextjs:
     build: .
-    volumes:
-      - .:/app
-      # - /app/node_modules  # ✅ Tailwind動作・開発ホットリロードの安定化に重要
-
     ports:
       - "3000:3000"
     environment:
       - NODE_ENV=development
-    restart: unless-stopped  # ←★自動起動させたいなら必須
+      - WATCHPACK_POLLING=true   # 必要なら有効化（Windows/Bind mountでファイル監視が怪しいとき）
+    volumes:
+      - .:/app
+      # - node_modules:/app/node_modules   # ← 重要: ホストで上書きされないよう node_modules を確保
+    restart: unless-stopped
 
-  #db:
-  # image: mysql:8
-  #  environment:
-  #    MYSQL_ROOT_PASSWORD: password
-  #  ports:
-  #    - "53306:3306"
-  #  # restart: unless-stopped  ←★MySQLは重複起動の原因にもなるので、あえて自動起動なしでもOK
+  # db:
+  #   image: mysql:8
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: password
+  #   ports:
+  #     - "53306:3306"
+  #   restart: unless-stopped
+
+volumes:
+  node_modules:
+    # driver: local   # デフォルト local
