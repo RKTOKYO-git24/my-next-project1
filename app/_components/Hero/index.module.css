@@ -3,10 +3,23 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(0, 0, 0, 0.5);
+  background: transparent;
   color: #fff;
   overflow: hidden;
   padding: 48px 0 100px;
+}
+
+/* 背景画像(.bgimg)の上に乗る黒オーバーレイ */
+.container::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 600px; /* .bgimg/.bgimgWrapper と合わせる */
+  background: rgba(0, 0, 0, 0.5);
+  z-index: -9;
+  pointer-events: none; 
 }
 
 .title {
