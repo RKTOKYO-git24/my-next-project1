@@ -166,8 +166,8 @@ export interface News {
   id: string;
   title: string;
   slug: string;
-  category: 'press' | 'important' | 'update';
-  publishedDate: string;
+  category: 'technology' | 'japan' | 'usa' | 'update' | 'private';
+  publishedDate?: string | null;
   excerpt?: string | null;
   content?: {
     root: {
@@ -184,6 +184,7 @@ export interface News {
     };
     [k: string]: unknown;
   } | null;
+  externalId?: string | null;
   thumbnail?: (string | null) | Media;
   status?: ('draft' | 'published') | null;
   updatedAt: string;
@@ -301,6 +302,7 @@ export interface NewsSelect<T extends boolean = true> {
   publishedDate?: T;
   excerpt?: T;
   content?: T;
+  externalId?: T;
   thumbnail?: T;
   status?: T;
   updatedAt?: T;
