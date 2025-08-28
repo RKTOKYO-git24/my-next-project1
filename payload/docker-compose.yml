@@ -1,0 +1,27 @@
+services:
+  mongo:
+    image: mongo:6
+    container_name: payload-mongo
+    restart: unless-stopped
+    ports: ["27017:27017"]
+    volumes: ["mongo_data:/data/db"]
+
+  payload:
+    image: node:22-alpine   # ★ ここを node:22-alpine へ
+    container_name: payload-app
+    working_dir: /usr/src/app
+    command: sh -c "npm install && npm run dev"
+    depends_on: [mongo]
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URI=mongodb://mongo:27017/payload   # ★ ここを DATABASE_URI に
+      - PAYLOAD_SECRET=change_me_long_random
+      - SERVER_URL=http://localhost:3100
+    ports: ["3100:3000"]
+    volumes:
+      - ./app:/usr/src/app
+      - /usr/src/app/node_modules
+      - ./media:/usr/src/app/media
+
+volumes:
+  mongo_data:
