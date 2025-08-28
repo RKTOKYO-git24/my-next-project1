@@ -1,3 +1,5 @@
+# /home/ryotaro/dev/mnp-dw-20250821/payload/docker-compose.yml
+
 services:
   mongo:
     image: mongo:6
@@ -5,23 +7,59 @@ services:
     restart: unless-stopped
     ports: ["27017:27017"]
     volumes: ["mongo_data:/data/db"]
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.runCommand({ ping: 1 }).ok"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
 
   payload:
-    image: node:22-alpine   # ★ ここを node:22-alpine へ
+  
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+
     container_name: payload-app
     working_dir: /usr/src/app
-    command: sh -c "npm install && npm run dev"
-    depends_on: [mongo]
+   
+    command: >
+      sh -lc "
+        if [ ! -d node_modules ] || [ -z \"$(ls -A node_modules 2>/dev/null)\" ]; then
+          (npm ci || npm install);
+        fi &&
+        npx payload generate:types &&
+        npx payload generate:importmap &&
+        npm run dev
+      "
+
+    depends_on:
+      mongo:
+        condition: service_healthy
+    restart: unless-stopped
+
     environment:
+      # Payload v3 なら DATABASE_URI、v2 なら MONGODB_URI を見るので両方定義しておくと安全
+      - DATABASE_URI=mongodb://mongo:27017/payload
+      - MONGODB_URI=mongodb://mongo:27017/payload
       - NODE_ENV=development
-      - DATABASE_URI=mongodb://mongo:27017/payload   # ★ ここを DATABASE_URI に
       - PAYLOAD_SECRET=change_me_long_random
       - SERVER_URL=http://localhost:3100
+      - NEXT_PUBLIC_SERVER_URL=http://localhost:3100 
+
     ports: ["3100:3000"]
     volumes:
-      - ./app:/usr/src/app
-      - /usr/src/app/node_modules
+      - ./app:/usr/src/app:delegated
+      - node_modules_cache:/usr/src/app.node_modules
       - ./media:/usr/src/app/media
+
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/ >/dev/null 2>&1 || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+      start_period: 15s
 
 volumes:
   mongo_data:
+  node_modules_cache:
