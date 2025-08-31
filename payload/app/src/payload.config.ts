@@ -1,3 +1,5 @@
+// /home/ryotaro/dev/mnp-dw-20250821/payload/app/src/payload.config.ts
+
 // storage-adapter-import-placeholder
 import { mongooseAdapter } from '@payloadcms/db-mongodb'
 import { payloadCloudPlugin } from '@payloadcms/payload-cloud'
@@ -40,8 +42,13 @@ export default buildConfig({
   ],
 
   serverURL: process.env.SERVER_URL || 'http://localhost:3100',
-  cors: ['http://localhost:3000'],
-  csrf: ['http://localhost:3000'],
+    cors: [
+    'http://localhost:3000',  // フロントのNext.js
+    'http://localhost:3100',  // Payload自身
+  ],
+  csrf: [
+    'http://localhost:3000',
+    'http://localhost:3100',
+  ],
 })
-
 

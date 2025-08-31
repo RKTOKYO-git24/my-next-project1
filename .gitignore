@@ -52,3 +52,11 @@ next-env.d.ts
 Thumbs.db
 ehthumbs.db
 Desktop.ini
+
+# ignore nested build artifacts
+.next/
+node_modules/
+build/
+out/
+payload/app/.next/
+payload/app/node_modules/

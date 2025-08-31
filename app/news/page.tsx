@@ -1,4 +1,5 @@
-import { getNewsList } from "@/app/_libs/microcms";
+import { getNewsList } from "@/app/_libs/payload";
+// import { getNewsList } from "@/app/_libs/microcms";
 import NewsList from "@/app/_components/NewsList";
 import Pagination from "../_components/Pagination";
 import SearchField from "@/app/_components/SearchField";

@@ -4,7 +4,6 @@ export const Users: CollectionConfig = {
   slug: 'users',
   auth: true,   // ← ログイン有効化
   admin: { useAsTitle: 'email' },
-  useAsTitle: 'email',
   access: {
     // ログイン済みなら自分のデータだけ読めるように制御したい場合
     read: ({ req }) => {
