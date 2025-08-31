@@ -1,3 +1,5 @@
+// /home/ryotaro/dev/mnp-dw-20250821/payload/app/eslint.config.mjs
+
 import { dirname } from 'path'
 import { fileURLToPath } from 'url'
 import { FlatCompat } from '@eslint/eslintrc'

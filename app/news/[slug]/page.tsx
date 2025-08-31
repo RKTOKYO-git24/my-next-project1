@@ -1,29 +1,39 @@
+// /home/ryotaro/dev/mnp-dw-20250821/app/news/[slug]/page.tsx
+
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getNewsDetail } from "@/app/_libs/payload";
-// import { getNewsDetail } from "@/app/_libs/microcms";
 import Article from "@/app/_components/Article";
 import ButtonLink from "@/app/_components/ButtonLink";
 import styles from "./page.module.css";
 
+// ビルド時フェッチを避けて実行時にAPIを叩く
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
+
 type Props = {
-  params: Promise<{
-    slug: string;
-  }>;
-  searchParams: Promise<{
-    dk?: string;
-  }>;
+  params: { slug: string };
+  searchParams?: { dk?: string };
 };
 
-export async function generateMetadata({
-  params,
-  searchParams,
-}: Props): Promise<Metadata> {
-//  const data = await getNewsDetail((await params).slug, {
-//    draftKey: (await searchParams).dk,
-//  });
+export async function generateMetadata(
+  { params, searchParams }: Props
+): Promise<Metadata> {
+  const draftKey = searchParams?.dk;
+  let data: any = null;
+  try {
+    data = await getNewsDetail(params.slug, draftKey ? { draftKey } : undefined);
+  } catch {
+    // 取得失敗時は Not Found 相当のメタデータ
+  }
 
-  const data = await getNewsDetail((await params).slug);
+  if (!data) {
+    return {
+      title: "News not found",
+      description: "The requested article could not be found.",
+      robots: { index: false },
+    };
+  }
 
   return {
     title: data.title,
@@ -37,11 +47,18 @@ export async function generateMetadata({
 }
 
 export default async function Page({ params, searchParams }: Props) {
-//  const data = await getNewsDetail((await params).slug, {
-//    draftKey: (await searchParams).dk,
-//  }).catch(notFound);
+  const draftKey = searchParams?.dk;
 
-  const data = await getNewsDetail((await params).slug);
+  let data: any = null;
+  try {
+    data = await getNewsDetail(params.slug, draftKey ? { draftKey } : undefined);
+  } catch {
+    // 無視して notFound() へ
+  }
+
+  if (!data) {
+    notFound();
+  }
 
   return (
     <>
