@@ -6,22 +6,6 @@ const credentials = process.env.BASIC_AUTH_CREDENTIALS || 'user:pass'
 const [expectedUser, expectedPass] = credentials.split(':')
 
 export function middleware(request: NextRequest) {
-  const url = request.nextUrl
-  const pathname = url.pathname
-
-  // 認証をスキップするパス
-  const publicPaths = [
-    '/favicon.ico',
-    '/robots.txt',
-    '/sitemap.xml',
-    '/api',
-    '/_next',
-    '/assets',
-  ]
-  if (publicPaths.some((path) => pathname.startsWith(path))) {
-    return NextResponse.next()
-  }
-
   const authHeader = request.headers.get('authorization')
 
   if (authHeader) {
@@ -41,6 +25,7 @@ export function middleware(request: NextRequest) {
   })
 }
 
+// ★ /physna と /physna/... だけに適用
 export const config = {
-  matcher: ['/:path*'],
+  matcher: ['/physna', '/physna/:path*'],
 }
