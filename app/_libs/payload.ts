@@ -3,24 +3,21 @@
 // ==============================
 // 環境変数
 // ------------------------------
-// クライアント/SSR 双方で使うAPIベースURLを用意してください。
-// 例（ローカルDocker）:
+// 例:
 //   NEXT_PUBLIC_PAYLOAD_API=http://localhost:3100/api
-//   NEXT_SERVER_PAYLOAD_API=http://payload:3000/api   // ← compose のサービス名に合わせる
+//   NEXT_SERVER_PAYLOAD_API=http://payload:3000/api
 // ==============================
 
 /** APIベース（.../api の形を想定）を返す。未設定なら null */
 function getApiBase(): string | null {
   const pub = process.env.NEXT_PUBLIC_PAYLOAD_API?.replace(/\/$/, '') || null;
   const svr = process.env.NEXT_SERVER_PAYLOAD_API?.replace(/\/$/, '') || null;
-  // SSR ではサーバー用を優先
   if (typeof window === 'undefined') return svr || pub;
   return pub;
 }
 
 /** APIベースから origin（http://host:port 部分）を取り出す */
 function getOriginFromApiBase(apiBase: string): string {
-  // apiBase が http://host:port/api の想定
   try {
     const u = new URL(apiBase);
     return `${u.protocol}//${u.host}`;
@@ -38,7 +35,7 @@ function toAbsoluteURL(input: string): string {
     return input;
   } catch {
     const apiBase = getApiBase();
-    if (!apiBase) return input; // 最低限のフォールバック
+    if (!apiBase) return input;
     const origin = getOriginFromApiBase(apiBase);
     const p = input.startsWith('/') ? input : `/${input}`;
     return origin + p;
@@ -46,27 +43,39 @@ function toAbsoluteURL(input: string): string {
 }
 
 /** Payload の file オブジェクトから表示用URLを安全に取り出す */
-function imageUrl(file: any | undefined): string | undefined {
-  if (!file) return undefined;
-  // Payloadが返す既定のURL（絶対 or /api/media/file/...）
-  let url: string | undefined = file.url || file.thumbnailURL || null || undefined;
+function imageUrl(file: unknown): string | undefined {
+  const f = file as
+    | {
+        url?: string;
+        thumbnailURL?: string;
+        filename?: string;
+        alt?: string;
+        width?: number;
+        height?: number;
+      }
+    | undefined;
 
-  // url が無い場合は filename から静的配信を推測（/media/<filename>）
-  if (!url && file.filename) url = `/media/${file.filename}`;
+  if (!f) return undefined;
+  let url: string | undefined = f.url || f.thumbnailURL || undefined;
+  if (!url && f.filename) url = `/media/${f.filename}`;
   if (!url) return undefined;
-
-  // 絶対化して、スペースや日本語を安全に
-  const abs = toAbsoluteURL(url);
-  return encodeURI(abs);
+  return encodeURI(toAbsoluteURL(url));
 }
 
 // ==============================
-// News 型と map
+// 型
 // ==============================
+export type Category = {
+  id: string;
+  title?: string;
+  name?: string;
+  slug?: string;
+};
+
 export type News = {
   id: string;
   title: string;
-  slug: string;
+  slug: string; // ← 必ず存在（mapで補完）
   description: string;
   thumbnail?: {
     url?: string;
@@ -78,32 +87,36 @@ export type News = {
   revisedAt: string | null;
   createdAt: string | null;
   updatedAt: string | null;
-  content: any;
-  category: any;
-  status: string;
+  content: unknown;
+  category?: Category | null;
+  status?: string; // ← 任意
 };
 
+// ==============================
+// map ユーティリティ
+// ==============================
 function mapNewsDoc(d: any): News {
   const tn = d?.thumbnail;
   return {
     id: d.id,
     title: d.title,
-    slug: d.slug,
-    description: d.excerpt ?? '',
+    // slug が無い記事は id を代用して必ず用意
+    slug: d.slug || d?.fields?.slug || d.id,
+    description: d.excerpt ?? d.description ?? '',
     thumbnail: tn
       ? {
-          url: imageUrl(tn), // ← 絶対URLとして返る
+          url: imageUrl(tn),
           alt: tn.alt ?? '',
           width: tn.width ?? 1200,
           height: tn.height ?? 630,
         }
       : undefined,
-    publishedAt: d.publishedDate ?? d.createdAt ?? d.updatedAt ?? null,
+    publishedAt: d.publishedDate ?? d.publishedAt ?? d.createdAt ?? d.updatedAt ?? null,
     revisedAt: d.updatedAt ?? null,
     createdAt: d.createdAt ?? null,
     updatedAt: d.updatedAt ?? null,
     content: d.content,
-    category: d.category,
+    category: d.category ?? d?.category?.value ?? null,
     status: d.status,
   };
 }
@@ -124,12 +137,22 @@ export async function getNewsList(params: {
   const sp = new URLSearchParams();
   sp.set('limit', String(limit));
   sp.set('page', String(page));
-  sp.set('depth', '1'); // ← Media を展開
-  if (q) sp.set('where[title][contains]', q);
-  if (category) sp.set('where[category][equals]', category);
+  sp.set('depth', '1'); // Media を展開
+
+  // 検索（title/description/content の OR）
+  if (q && q.trim()) {
+    sp.set('where[or][0][title][contains]', q);
+    sp.set('where[or][1][description][contains]', q);
+    sp.set('where[or][2][content][contains]', q);
+  }
+
+  if (category) {
+    // collection のフィールド名に合わせて調整
+    sp.set('where[category][equals]', category);
+  }
 
   const url = `${base}/news?${sp.toString()}`;
-  const res = await fetch(url, { cache: 'no-store' }); // 切り分けのため no-store
+  const res = await fetch(url, { cache: 'no-store' });
   if (!res.ok) throw new Error(`Failed to fetch news list: ${res.status} (${url})`);
 
   const data = await res.json();
@@ -157,7 +180,7 @@ export async function getNewsDetail(slug: string): Promise<News | null> {
 }
 
 // ==============================
-// Members 型と map（必要なら使用）
+// Members（必要なら使用）
 // ==============================
 export type Member = {
   id: string;

@@ -8,6 +8,19 @@ import Date from "../Date";
 
 type Props = { news: News[] };
 
+// Category コンポーネントが要求する形に整形
+function toCategoryProp(cat: News["category"]):
+  | string
+  | { name: string; slug?: string }
+  | undefined {
+  if (!cat) return undefined;
+  if (typeof cat === "string") return cat;
+
+  const name = cat.name ?? cat.title ?? cat.slug;
+  if (!name) return undefined;
+  return { name, slug: cat.slug };
+}
+
 export default function NewsList({ news }: Props) {
   if (!news || news.length === 0) return <p>No Articles yet</p>;
 
@@ -15,11 +28,12 @@ export default function NewsList({ news }: Props) {
     <ul>
       {news.map((article) => {
         const t = article.thumbnail;
-        // API が返す絶対URL（例: http://localhost:3100/api/media/file/...）
         const src = t?.url ?? undefined;
 
         const w = typeof t?.width === "number" ? t!.width! : 1200;
         const h = typeof t?.height === "number" ? t!.height! : 630;
+
+        const categoryProp = toCategoryProp(article.category);
 
         return (
           <li key={article.id} className={styles.list}>
@@ -31,8 +45,6 @@ export default function NewsList({ news }: Props) {
                   className={styles.image}
                   width={w}
                   height={h}
-                  // まずは確実に表示させるために最適化をオフ
-                  // 表示が確認できたらこの行を削除してOK
                   unoptimized
                 />
               ) : (
@@ -48,7 +60,7 @@ export default function NewsList({ news }: Props) {
               <dl className={styles.content}>
                 <dt className={styles.title}>{article.title}</dt>
                 <dd className={styles.meta}>
-                  <Category category={article.category} />
+                  {categoryProp && <Category category={categoryProp} />}
                   <Date date={article.publishedAt ?? article.createdAt} />
                 </dd>
               </dl>
