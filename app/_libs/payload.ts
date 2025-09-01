@@ -1,4 +1,4 @@
-// app/_libs/payload.ts
+// /home/ryotaro/dev/mnp-dw-20250821/app/_libs/payload.ts
 
 function getApiBase() {
   const publicApi = process.env.NEXT_PUBLIC_PAYLOAD_API?.replace(/\/$/, '');

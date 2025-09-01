@@ -1,3 +1,5 @@
+// /home/ryotaro/dev/mnp-dw-20250821/app/_libs/microcms.ts
+
 import { createClient } from "microcms-js-sdk";
 import type {
   MicroCMSQueries,

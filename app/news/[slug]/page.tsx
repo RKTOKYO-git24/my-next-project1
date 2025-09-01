@@ -13,26 +13,21 @@ export const fetchCache = "force-no-store";
 
 type Props = {
   params: { slug: string };
-  searchParams?: { dk?: string };
 };
 
 export async function generateMetadata(
-  { params, searchParams }: Props
+  { params }: { params: { slug: string } }
 ): Promise<Metadata> {
-  const draftKey = searchParams?.dk;
   let data: any = null;
   try {
-    data = await getNewsDetail(params.slug, draftKey ? { draftKey } : undefined);
+    data = await getNewsDetail(params.slug);
   } catch {
-    // 取得失敗時は Not Found 相当のメタデータ
+    // 無視して notFound()へ
+
   }
 
   if (!data) {
-    return {
-      title: "News not found",
-      description: "The requested article could not be found.",
-      robots: { index: false },
-    };
+    notFound();
   }
 
   return {
@@ -46,12 +41,11 @@ export async function generateMetadata(
   };
 }
 
-export default async function Page({ params, searchParams }: Props) {
-  const draftKey = searchParams?.dk;
+export default async function Page({ params }: Props) {
 
   let data: any = null;
   try {
-    data = await getNewsDetail(params.slug, draftKey ? { draftKey } : undefined);
+    data = await getNewsDetail(params.slug);
   } catch {
     // 無視して notFound() へ
   }
