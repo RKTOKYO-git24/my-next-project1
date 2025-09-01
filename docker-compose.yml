@@ -4,27 +4,21 @@ services:
     build: .
     ports:
       - "3000:3000"
-    environment:
-      - NODE_ENV=development
-      - WATCHPACK_POLLING=true   # 必要なら有効化（Windows/Bind mountでファイル監視が怪しいとき）
-      - NEXT_PUBLIC_PAYLOAD_API
-      - NEXT_SERVER_PAYLOAD_API
-    volumes:
-      - .:/app
-      # - node_modules:/app/node_modules   # ← 重要: ホストで上書きされないよう node_modules を確保
+    # env_file で .env.local を読み込む
     env_file:
       - .env.local
-
+    # environment は“値を持つものだけ”を書く（無指定キーは削除）
+    environment:
+      NODE_ENV: development
+      WATCHPACK_POLLING: "true"      # 必要なら
+      CHOKIDAR_USEPOLLING: "true"    # 必要なら
+    # ここ（サービス配下）に置く
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - .:/app
+      # - node_modules:/app/node_modules
     restart: unless-stopped
-
-  # db:
-  #   image: mysql:8
-  #   environment:
-  #     MYSQL_ROOT_PASSWORD: password
-  #   ports:
-  #     - "53306:3306"
-  #   restart: unless-stopped
 
 volumes:
   node_modules:
-    # driver: local   # デフォルト local

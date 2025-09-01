@@ -1,10 +1,11 @@
+// /home/ryotaro/dev/mnp-dw-20250821/app/_components/NewsList/index.tsx
+
 import Image from "next/image";
 import Link from "next/link";
-
+import type { News } from "@/app/_libs/payload";
 import styles from "./index.module.css";
 import Category from "../Category";
 import Date from "../Date";
-import { News } from "@/app/_libs/microcms";
 
 type Props = {
   news: News[];

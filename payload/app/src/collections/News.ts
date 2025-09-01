@@ -1,6 +1,19 @@
-// /home/ryotaro/dev/mnp-dw-20250821/payload/app/src/collections/News.ts
+// /payload/app/src/collections/News.ts
+import type { CollectionConfig, Access, Where } from 'payload';
 
-import type { CollectionConfig } from 'payload';
+const publicRead: Access = ({ req }) => {
+  // ログイン済みは全件OK
+  if (req.user) return true;
+
+  // 未ログインは公開記事のみ
+  const where: Where = {
+    and: [
+      { status:   { equals: 'published' } },
+      { category: { not_equals: 'private' } },
+    ],
+  };
+  return where; // ✅ Where をそのまま返す
+};
 
 export const News: CollectionConfig = {
   slug: 'news',
@@ -8,22 +21,8 @@ export const News: CollectionConfig = {
   admin: { useAsTitle: 'title' },
 
   access: {
-  read: ({ req }) => {
-    const isLoggedIn = !!req.user;
-
-    if (isLoggedIn) {
-      return true;
-    }
-
-    // PayloadのWhere条件はフィールド名ごとに書く
-    return {
-      where: {
-        status: { equals: 'published' },
-        category: { not_equals: 'private' },
-      },
-    };
+    read: publicRead, // ✅ Access 型の関数を割り当て
   },
-},
 
   fields: [
     { name: 'title', type: 'text', required: true },
@@ -35,23 +34,23 @@ export const News: CollectionConfig = {
       defaultValue: 'update',
       options: [
         { label: 'Technology', value: 'technology' },
-        { label: 'Japan', value: 'japan' },
-        { label: 'U.S.A.', value: 'usa' },
-        { label: 'Update', value: 'update' },
-        { label: 'Private', value: 'private' },
+        { label: 'Japan',      value: 'japan' },
+        { label: 'U.S.A.',     value: 'usa' },
+        { label: 'Update',     value: 'update' },
+        { label: 'Private',    value: 'private' },
       ],
     },
     { name: 'publishedDate', type: 'date' },
-    { name: 'excerpt', type: 'textarea' },
-    { name: 'content', type: 'richText' },
-    { name: 'externalId', type: 'text' }, // microCMSのID保持（冪等化に使う）
-    { name: 'thumbnail', type: 'upload', relationTo: 'media' },
+    { name: 'excerpt',       type: 'textarea' },
+    { name: 'content',       type: 'richText' },
+    { name: 'externalId',    type: 'text' },
+    { name: 'thumbnail',     type: 'upload', relationTo: 'media' },
     {
       name: 'status',
       type: 'select',
       defaultValue: 'published',
       options: [
-        { label: 'Draft', value: 'draft' },
+        { label: 'Draft',     value: 'draft' },
         { label: 'Published', value: 'published' },
       ],
     },
