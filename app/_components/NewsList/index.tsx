@@ -9,26 +9,31 @@ import Date from "../Date";
 type Props = { news: News[] };
 
 export default function NewsList({ news }: Props) {
-  if (news.length === 0) return <p>No Articles yet</p>;
+  if (!news || news.length === 0) return <p>No Articles yet</p>;
 
   return (
     <ul>
       {news.map((article) => {
-        const hasThumb =
-          !!article.thumbnail?.url &&
-          typeof article.thumbnail?.width === "number" &&
-          typeof article.thumbnail?.height === "number";
+        const t = article.thumbnail;
+        // API が返す絶対URL（例: http://localhost:3100/api/media/file/...）
+        const src = t?.url ?? undefined;
+
+        const w = typeof t?.width === "number" ? t!.width! : 1200;
+        const h = typeof t?.height === "number" ? t!.height! : 630;
 
         return (
           <li key={article.id} className={styles.list}>
             <Link href={`/news/${article.slug}`} className={styles.link}>
-              {hasThumb ? (
+              {src ? (
                 <Image
-                  src={article.thumbnail!.url!}
-                  alt={article.thumbnail!.alt || article.title}
+                  src={src}
+                  alt={t?.alt || article.title}
                   className={styles.image}
-                  width={article.thumbnail!.width!}
-                  height={article.thumbnail!.height!}
+                  width={w}
+                  height={h}
+                  // まずは確実に表示させるために最適化をオフ
+                  // 表示が確認できたらこの行を削除してOK
+                  unoptimized
                 />
               ) : (
                 <Image

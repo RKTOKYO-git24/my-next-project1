@@ -15,6 +15,7 @@ services:
     # ここ（サービス配下）に置く
     extra_hosts:
       - "host.docker.internal:host-gateway"
+      
     volumes:
       - .:/app
       # - node_modules:/app/node_modules

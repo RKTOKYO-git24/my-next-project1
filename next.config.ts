@@ -1,33 +1,32 @@
 // next.config.ts
+import type { NextConfig } from 'next'
 
-module.exports = {
+const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
+      // 既存ホスト
       {
-        protocol: "https",
-        hostname: "cdn.physna.com",
+        protocol: 'https',
+        hostname: 'cdn.physna.com',
       },
       {
-        protocol: "https",
-        hostname: "images.microcms-assets.io",
+        protocol: 'https',
+        hostname: 'images.microcms-assets.io',
       },
       {
-        protocol: "https",
-        hostname: "storage.googleapis.com", //
+        protocol: 'https',
+        hostname: 'storage.googleapis.com',
       },
+
+      // Payload (dev環境) - 画像エンドポイントのみ許可
       {
-        protocol: "http",
-        hostname: "localhost",
-        port: "3100",
-        pathname: "/media/**",
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '3100',
+        pathname: '/api/media/file/**',
       },
     ],
   },
-// webpackDevMiddleware: (config) => {
-//    config.watchOptions = {
-//      poll: 1000,            // 毎秒ポーリング
-//      aggregateTimeout: 300, // debounce
-//    };
-//    return config;
-//  },
-};
+}
+
+export default nextConfig

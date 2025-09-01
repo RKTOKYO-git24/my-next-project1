@@ -7,11 +7,27 @@ import Category from "../Category";
 
 type Props = { data: News };
 
+// URL が二重エンコードされている場合(%2520など)を安全に戻す
+function safeDecode(url?: string | null) {
+  if (!url) return undefined;
+  try {
+    // 2回まで decode 試行（%2520 → %20 → ' '）
+    const once = decodeURI(url);
+    return once.includes("%") ? decodeURI(once) : once;
+  } catch {
+    return url; // 失敗しても元を返す（最悪でも表示を試みる）
+  }
+}
+
 export default function Article({ data }: Props) {
-  const hasThumb =
-    !!data.thumbnail?.url &&
-    typeof data.thumbnail?.width === "number" &&
-    typeof data.thumbnail?.height === "number";
+  const rawUrl = data.thumbnail?.url;
+  const src = safeDecode(rawUrl);
+
+  // width/height が無い場合のフォールバック
+  const w = typeof data.thumbnail?.width === "number" ? data.thumbnail!.width! : 1200;
+  const h = typeof data.thumbnail?.height === "number" ? data.thumbnail!.height! : 630;
+
+  const hasThumb = !!src;
 
   return (
     <article className={styles.article}>
@@ -21,32 +37,32 @@ export default function Article({ data }: Props) {
           <Category category={data.category} />
           <DateComp date={data.publishedAt ?? data.createdAt} />
         </div>
+
         {hasThumb && (
           <div className={styles.cover}>
+            {/* 幅高が無くても描画できるよう、フォールバック値を渡す */}
             <Image
-              src={data.thumbnail!.url!}
-              alt={data.thumbnail!.alt || data.title}
-              width={data.thumbnail!.width!}
-              height={data.thumbnail!.height!}
+              src={src!}
+              alt={data.thumbnail?.alt || data.title}
+              width={w}
+              height={h}
               className={styles.image}
               priority
+              // 開発中だけ素早く切り分けしたいときは下行を一時的に有効化:
+              // unoptimized
+              sizes="(max-width: 768px) 100vw, 1200px"
             />
           </div>
         )}
       </header>
 
       <section className={styles.body}>
-        {/* Payload の content は richText(Lexical) である可能性が高い */}
         {typeof data.content === "string" ? (
           <div dangerouslySetInnerHTML={{ __html: data.content }} />
         ) : data.content ? (
-          // まずは暫定表示（Lexicalレンダラ未導入の場合）
           <pre style={{ whiteSpace: "pre-wrap" }}>
             {JSON.stringify(data.content, null, 2)}
           </pre>
-          // 本格表示したい場合は @payloadcms/richtext-lexical/react を導入し、
-          // import { RichText } from "@payloadcms/richtext-lexical/react";
-          // <RichText data={data.content} />
         ) : null}
       </section>
     </article>

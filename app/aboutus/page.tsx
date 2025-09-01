@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { getMembersList } from "../_libs/microcms";
+import { getMembersList } from "../_libs/payload";
 import { MEMBERS_LIST_LIMIT } from "@/app/_constants";
 import styles from "./page.module.css";
 
@@ -13,17 +13,19 @@ export default async function Page() {
         <ul>
           {data.contents.map((member) => (
             <li key={member.id} className={styles.list}>
-              <Image
-                src={member.image.url}
-                alt=""
-                width={member.image.width}
-                height={member.image.height}
-                className={styles.image}
-              />
+              {member.image?.url && (
+                <Image
+                  src={member.image.url}
+                  alt={member.image.alt || member.name}
+                  width={member.image.width ?? 300}
+                  height={member.image.height ?? 300}
+                  className={styles.image}
+                />
+              )}
               <dl>
                 <dt className={styles.name}>{member.name}</dt>
                 <dt className={styles.position}>{member.position}</dt>
-                <dt className={styles.position}>{member.profile}</dt>
+                <dt className={styles.profile}>{member.profile}</dt>
               </dl>
             </li>
           ))}
