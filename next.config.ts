@@ -1,4 +1,5 @@
-// next.config.js
+// next.config.ts
+
 module.exports = {
   images: {
     remotePatterns: [
@@ -13,6 +14,12 @@ module.exports = {
       {
         protocol: "https",
         hostname: "storage.googleapis.com", //
+      },
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "3100",
+        pathname: "/media/**",
       },
     ],
   },

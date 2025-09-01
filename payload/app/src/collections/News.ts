@@ -44,7 +44,7 @@ export const News: CollectionConfig = {
     { name: 'excerpt',       type: 'textarea' },
     { name: 'content',       type: 'richText' },
     { name: 'externalId',    type: 'text' },
-    { name: 'thumbnail',     type: 'upload', relationTo: 'media' },
+    { name: 'thumbnail',     type: 'upload', relationTo: 'media', required: true },
     {
       name: 'status',
       type: 'select',

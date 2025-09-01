@@ -1,18 +1,47 @@
 // /app/_libs/payload.ts
 
-function getApiBase() {
-  const publicApi = process.env.NEXT_PUBLIC_PAYLOAD_API?.replace(/\/$/, '');
-  const serverApi = process.env.NEXT_SERVER_PAYLOAD_API?.replace(/\/$/, '');
+import type { NextRequest } from "next/server";
 
-  // サーバーサイドは内部ネットワーク優先、クライアントは public を利用
-  if (typeof window === 'undefined') return serverApi || publicApi || '';
-  return publicApi || '';
+function requireEnv(name: string): string {
+  const v = process.env[name];
+  if (!v) throw new Error(`Missing required env: ${name}`);
+  return v.replace(/\/$/, "");
+}
+
+function getApiBase() {
+  const publicApi = process.env.NEXT_PUBLIC_PAYLOAD_API?.replace(/\/$/, "");
+  const serverApi = process.env.NEXT_SERVER_PAYLOAD_API?.replace(/\/$/, "");
+  // サーバーは内部URL必須、クライアントは public
+  if (typeof window === "undefined") return serverApi || publicApi || null;
+  return publicApi || null;
+}
+
+function ensureAbsoluteUrlOnServer(pathOrUrl: string): string {
+  if (typeof window !== "undefined") return pathOrUrl; // クライアントはそのまま
+  try {
+    // すでに絶対URLならそのまま
+    new URL(pathOrUrl);
+    return pathOrUrl;
+  } catch {
+    // 相対URLならベース必須
+    const base = getApiBase();
+    if (!base) {
+      throw new Error(
+        `Payload API base URL is not configured on server (NEXT_SERVER_PAYLOAD_API or NEXT_PUBLIC_PAYLOAD_API).`
+      );
+    }
+    return `${base}${pathOrUrl.startsWith("/") ? "" : "/"}${pathOrUrl}`;
+  }
 }
 
 function imageUrl(file: any | undefined): string | undefined {
   if (!file) return;
   if (file.url) return file.url;
-  if (file.filename) return `${getApiBase().replace(/\/api$/, '')}/media/${file.filename}`;
+  if (file.filename) {
+    const base = getApiBase();
+    // base がない場合は undefined 返す（UI 側でフォールバック）
+    return base ? `${base.replace(/\/api$/, "")}/media/${file.filename}` : undefined;
+  }
 }
 
 // ===== Types =====

@@ -6,60 +6,52 @@ import { getNewsDetail } from "@/app/_libs/payload";
 import Article from "@/app/_components/Article";
 import ButtonLink from "@/app/_components/ButtonLink";
 import styles from "./page.module.css";
+import { normalizeError } from "@/app/_libs/utils";
 
-// ビルド時フェッチを避けて実行時にAPIを叩く
 export const dynamic = "force-dynamic";
 export const fetchCache = "force-no-store";
 
-type Props = {
-  params: { slug: string };
-};
+type Props = { params: { slug: string } };
 
-export async function generateMetadata(
-  { params }: { params: { slug: string } }
-): Promise<Metadata> {
-  let data: any = null;
+// 404 は通常フロー、その他はログを残す
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   try {
-    data = await getNewsDetail(params.slug);
-  } catch {
-    // 無視して notFound()へ
-
-  }
-
-  if (!data) {
-    notFound();
-  }
-
-  return {
-    title: data.title,
-    description: data.description,
-    openGraph: {
+    const data = await getNewsDetail(params.slug);
+    if (!data) {
+      return { title: "News not found", description: "Not found", robots: { index: false } };
+    }
+    return {
       title: data.title,
       description: data.description,
-      images: [data?.thumbnail?.url ?? ""],
-    },
-  };
+      openGraph: {
+        title: data.title,
+        description: data.description,
+        images: data.thumbnail?.url ? [data.thumbnail.url] : [],
+      },
+    };
+  } catch (e) {
+    const err = normalizeError(e);
+    console.error(`[generateMetadata] getNewsDetail(${params.slug}) failed:`, err);
+    return { title: "News not found", description: "Not found", robots: { index: false } };
+  }
 }
 
 export default async function Page({ params }: Props) {
-
-  let data: any = null;
   try {
-    data = await getNewsDetail(params.slug);
-  } catch {
-    // 無視して notFound() へ
+    const data = await getNewsDetail(params.slug);
+    if (!data) notFound(); // 404 へ
+    return (
+      <>
+        <Article data={data} />
+        <div className={styles.footer}>
+          <ButtonLink href="/news">To News List</ButtonLink>
+        </div>
+      </>
+    );
+  } catch (e) {
+    const err = normalizeError(e);
+    console.error(`[Page] getNewsDetail(${params.slug}) failed:`, err);
+    // 取得失敗は 404 にせず 500 系へ流すほうが原因が見えやすい
+    throw err;
   }
-
-  if (!data) {
-    notFound();
-  }
-
-  return (
-    <>
-      <Article data={data} />
-      <div className={styles.footer}>
-        <ButtonLink href="/news">To News List</ButtonLink>
-      </div>
-    </>
-  );
 }

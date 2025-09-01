@@ -1,51 +1,37 @@
+// /app/news/category/[id]/p/[current]/page.tsx
 import { notFound } from "next/navigation";
-import { getCategoryDetail, getNewsList } from "@/app/_libs/microcms";
+import { getNewsList } from "@/app/_libs/payload";
 import NewsList from "@/app/_components/NewsList";
 import Pagination from "@/app/_components/Pagination";
+import Category from "@/app/_components/Category";
 import { NEWS_LIST_LIMIT } from "@/app/_constants";
 
-// Correctly type the params as a resolved object
 type Props = {
-  params: Promise<{
-    id: string;
-    current: string;
-  }>;
+  params: { id: string; current: string };
 };
 
 export default async function Page({ params }: Props) {
-  // No need to resolve the params promise manually anymore, just access the properties
+  const categoryId = params.id;                 // 例: "technology"
+  const currentPage = Number.parseInt(params.current, 10);
+  if (Number.isNaN(currentPage) || currentPage < 1) notFound();
 
-  const { id, current } = await params;
-
-  // Parse 'current' to integer and handle invalid values
-  const currentPage = parseInt(current, 5); // base 10 is generally better for parsing numbers
-
-  if (Number.isNaN(currentPage) || currentPage < 1) {
-    notFound();
-  }
-
-  // Fetch category details
-  const category = await getCategoryDetail(id).catch(notFound);
-
-  // Fetch the list of news based on pagination
+  // Payload 版 API（page/limit/category を使う）
   const { contents: news, totalCount } = await getNewsList({
-    filters: `category[equals]${category.id}`,
     limit: NEWS_LIST_LIMIT,
-    offset: NEWS_LIST_LIMIT * (currentPage - 1),
+    page: currentPage,
+    category: categoryId,
   });
 
-  // If no news found, trigger 'notFound' error
-  if (news.length === 0) {
-    notFound();
-  }
+  if (!news || news.length === 0) notFound();
 
   return (
     <>
+      <p>List of <Category category={categoryId} /></p>
       <NewsList news={news} />
       <Pagination
         totalCount={totalCount}
         current={currentPage}
-        basePath={`/news/category/${category.id}`}
+        basePath={`/news/category/${categoryId}`}
       />
     </>
   );

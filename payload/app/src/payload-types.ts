@@ -185,7 +185,7 @@ export interface News {
     [k: string]: unknown;
   } | null;
   externalId?: string | null;
-  thumbnail?: (string | null) | Media;
+  thumbnail: string | Media;
   status?: ('draft' | 'published') | null;
   updatedAt: string;
   createdAt: string;
