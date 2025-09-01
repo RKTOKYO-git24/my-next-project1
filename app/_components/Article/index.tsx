@@ -7,15 +7,25 @@ import Category from "../Category";
 
 type Props = { data: News };
 
+// Category が要求する型に合わせて正規化（name を必ず用意）
+function toCategoryProp(
+  cat: News["category"]
+): string | { name: string; slug?: string } | undefined {
+  if (!cat) return undefined;
+  if (typeof cat === "string") return cat;
+  const name = cat.name ?? cat.title ?? cat.slug;
+  if (!name) return undefined;
+  return { name, slug: cat.slug };
+}
+
 // URL が二重エンコードされている場合(%2520など)を安全に戻す
 function safeDecode(url?: string | null) {
   if (!url) return undefined;
   try {
-    // 2回まで decode 試行（%2520 → %20 → ' '）
     const once = decodeURI(url);
     return once.includes("%") ? decodeURI(once) : once;
   } catch {
-    return url; // 失敗しても元を返す（最悪でも表示を試みる）
+    return url;
   }
 }
 
@@ -28,19 +38,19 @@ export default function Article({ data }: Props) {
   const h = typeof data.thumbnail?.height === "number" ? data.thumbnail!.height! : 630;
 
   const hasThumb = !!src;
+  const categoryProp = toCategoryProp(data.category);
 
   return (
     <article className={styles.article}>
       <header className={styles.header}>
         <h1 className={styles.title}>{data.title}</h1>
         <div className={styles.meta}>
-          <Category category={data.category} />
+          {categoryProp && <Category category={categoryProp} />}
           <DateComp date={data.publishedAt ?? data.createdAt} />
         </div>
 
         {hasThumb && (
           <div className={styles.cover}>
-            {/* 幅高が無くても描画できるよう、フォールバック値を渡す */}
             <Image
               src={src!}
               alt={data.thumbnail?.alt || data.title}
@@ -48,7 +58,7 @@ export default function Article({ data }: Props) {
               height={h}
               className={styles.image}
               priority
-              // 開発中だけ素早く切り分けしたいときは下行を一時的に有効化:
+              // 開発中だけ素早く切り分けしたいときは一時的に有効化:
               // unoptimized
               sizes="(max-width: 768px) 100vw, 1200px"
             />
