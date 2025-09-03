@@ -1,7 +1,7 @@
 "use client";
 
 import { createContactData } from "@/app/_actions/contact";
-import { useActionState } from "react";
+import { useState } from "react";
 import styles from "./index.module.css";
 
 // ✅ 状態型を定義
@@ -16,10 +16,14 @@ const initialState: ContactFormState = {
 };
 
 export default function ContactForm() {
-  const [state, formAction] = useActionState<ContactFormState, FormData>(
-    createContactData,
-    initialState
-  );
+  const [state, setState] = useState<ContactFormState>(initialState);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const result = await createContactData(state, formData); // ← state も渡す
+    setState(result);
+  };
 
   if (state?.status === "success") {
     return (
@@ -32,7 +36,7 @@ export default function ContactForm() {
   }
 
   return (
-    <form className={styles.form} action={formAction}>
+    <form className={styles.form} onSubmit={handleSubmit}>
       <div className={styles.horizontal}>
         <div className={styles.item}>
           <label className={styles.label} htmlFor="lastname">LAST NAME</label>
