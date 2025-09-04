@@ -7,10 +7,10 @@ type Props = {
   children: React.ReactNode;
 };
 
-export default function NewsLayout({ children }: Props) {
+export default async function NewsLayout({ children }: Props) {
   // リクエストヘッダから Host を取得
-  const h = headers(); // ✅ Promise 型誤認を避けるため一旦変数に代入
-  const host = h?.get("host") || "";
+  const h = await headers(); // 👈 await を追加
+  const host = h.get("host") || "";
 
   // 初期値は NEWS としておき、環境ごとに切り替える
   let subTitle = "NEWS";
