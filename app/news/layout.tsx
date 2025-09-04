@@ -9,7 +9,8 @@ type Props = {
 
 export default function NewsLayout({ children }: Props) {
   // リクエストヘッダから Host を取得
-  const host = headers().get("host") || "";
+  const h = headers(); // ✅ Promise 型誤認を避けるため一旦変数に代入
+  const host = h?.get("host") || "";
 
   // 初期値は NEWS としておき、環境ごとに切り替える
   let subTitle = "NEWS";
