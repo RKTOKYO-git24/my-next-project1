@@ -187,21 +187,7 @@ export interface News {
   category: 'technology' | 'japan' | 'usa' | 'update' | 'private';
   publishedDate?: string | null;
   excerpt?: string | null;
-  content?: {
-    root: {
-      type: string;
-      children: {
-        type: string;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
+  content?: string | null;
   externalId?: string | null;
   thumbnail: string | Media;
   status?: ('draft' | 'published') | null;

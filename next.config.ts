@@ -23,7 +23,7 @@ const nextConfig: NextConfig = {
         protocol: 'http',
         hostname: 'localhost',
         port: '3100',
-        pathname: '/api/media/file/**',
+        pathname: '/api/media/file/:path*',
       },
     ],
   },

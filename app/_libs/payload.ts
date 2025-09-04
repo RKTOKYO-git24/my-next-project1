@@ -72,10 +72,18 @@ export type Category = {
   slug?: string;
 };
 
+export type RichTextContent = {
+  root: {
+    children: {
+      children?: { text: string }[];
+    }[];
+  };
+};
+
 export type News = {
   id: string;
   title: string;
-  slug: string; // ← 必ず存在（mapで補完）
+  slug: string;
   description: string;
   thumbnail?: {
     url?: string;
@@ -87,9 +95,9 @@ export type News = {
   revisedAt: string | null;
   createdAt: string | null;
   updatedAt: string | null;
-  content: unknown;
+  content?: string | RichTextContent; // 👈 string または RichText JSON
   category?: Category | null;
-  status?: string; // ← 任意
+  status?: string;
 };
 
 // ==============================

@@ -1,11 +1,17 @@
 // /app/_components/Article/index.tsx
 import Image from "next/image";
 import type { News } from "@/app/_libs/payload";
+import type { RichTextContent } from "@/app/_libs/payload";
 import styles from "./index.module.css";
 import DateComp from "../Date";
 import Category from "../Category";
 
 type Props = { data: News };
+
+// 型ガード関数
+function isRichText(content: unknown): content is RichTextContent {
+  return typeof content === "object" && content !== null && "root" in content;
+}
 
 // Category が要求する型に合わせて正規化（name を必ず用意）
 function toCategoryProp(
@@ -30,6 +36,7 @@ function safeDecode(url?: string | null) {
 }
 
 export default function Article({ data }: Props) {
+  
   const rawUrl = data.thumbnail?.url;
   const src = safeDecode(rawUrl);
 
@@ -66,15 +73,19 @@ export default function Article({ data }: Props) {
         )}
       </header>
 
-      <section className={styles.body}>
-        {typeof data.content === "string" ? (
-          <div dangerouslySetInnerHTML={{ __html: data.content }} />
-        ) : data.content ? (
-          <pre style={{ whiteSpace: "pre-wrap" }}>
-            {JSON.stringify(data.content, null, 2)}
-          </pre>
-        ) : null}
-      </section>
+     <section className={styles.body}>
+  {typeof data.content === "string" ? (
+    <div dangerouslySetInnerHTML={{ __html: data.content }} />
+  ) : isRichText(data.content) ? (
+    <div>
+      {data.content.root.children
+        .map((child) =>
+          child.children?.map((c) => c.text).join(" ")
+        )
+        .join("\n")}
+    </div>
+  ) : null}
+</section>
     </article>
   );
 }

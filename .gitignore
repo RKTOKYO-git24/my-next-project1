@@ -60,3 +60,6 @@ build/
 out/
 payload/app/.next/
 payload/app/node_modules/
+
+# 画像は Git 管理しない。本番は Payload API 経由で配信。
+payload/media/

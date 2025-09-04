@@ -11,12 +11,15 @@ import { normalizeError } from "@/app/_libs/utils";
 export const dynamic = "force-dynamic";
 export const fetchCache = "force-no-store";
 
-type Props = { params: { slug: string } };
+// ✅ props.params を Promise として受け取る
+type Props = { params: Promise<{ slug: string }> };
 
 // 404 は通常フロー、その他はログを残す
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   try {
-    const data = await getNewsDetail(params.slug);
+    const { slug } = await params; // 👈 await で展開
+    const data = await getNewsDetail(slug);
+
     if (!data) {
       return { title: "News not found", description: "Not found", robots: { index: false } };
     }
@@ -30,15 +33,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       },
     };
   } catch (e) {
+    const { slug } = await params;
     const err = normalizeError(e);
-    console.error(`[generateMetadata] getNewsDetail(${params.slug}) failed:`, err);
+    console.error(`[generateMetadata] getNewsDetail(${slug}) failed:`, err);
     return { title: "News not found", description: "Not found", robots: { index: false } };
   }
 }
 
 export default async function Page({ params }: Props) {
   try {
-    const data = await getNewsDetail(params.slug);
+    const { slug } = await params; // 👈 await で展開
+    const data = await getNewsDetail(slug);
+
     if (!data) notFound(); // 404 へ
     return (
       <>
@@ -49,8 +55,9 @@ export default async function Page({ params }: Props) {
       </>
     );
   } catch (e) {
+    const { slug } = await params;
     const err = normalizeError(e);
-    console.error(`[Page] getNewsDetail(${params.slug}) failed:`, err);
+    console.error(`[Page] getNewsDetail(${slug}) failed:`, err);
     // 取得失敗は 404 にせず 500 系へ流すほうが原因が見えやすい
     throw err;
   }
