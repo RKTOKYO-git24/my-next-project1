@@ -184,60 +184,25 @@ export async function getNewsDetail(slug: string): Promise<News | null> {
   return doc ? mapNewsDoc(doc) : null;
 }
 
-// ==============================
-// Members（必要なら使用）
-// ==============================
-export type Member = {
-  id: string;
-  name: string;
-  position?: string;
-  profile?: string;
-  image?: {
-    url?: string;
-    width?: number;
-    height?: number;
-    alt?: string;
-  };
-};
 
-function mapMemberDoc(d: any): Member {
-  const img = d?.image;
-  return {
-    id: d.id,
-    name: d.name,
-    position: d.position ?? '',
-    profile: d.profile ?? '',
-    image: img
-      ? {
-          url: imageUrl(img),
-          alt: img.alt ?? '',
-          width: img.width ?? 400,
-          height: img.height ?? 400,
-        }
-      : undefined,
-  };
-}
-
-export async function getMembersList(params?: {
-  limit?: number;
-  page?: number;
-}): Promise<{ contents: Member[]; totalCount: number }> {
-  const { limit = 100, page = 1 } = params ?? {};
+export async function getMembersList(params: { limit: number }) {
   const base = getApiBase();
-  if (!base) throw new Error('Payload API base URL is not set');
+  if (!base) throw new Error("Payload API base URL is not set");
 
   const sp = new URLSearchParams();
-  sp.set('limit', String(limit));
-  sp.set('page', String(page));
-  sp.set('depth', '1');
+  sp.set("limit", params.limit.toString());
+  sp.set("page", "1");
+  sp.set("depth", "1");
 
   const url = `${base}/members?${sp.toString()}`;
-  const res = await fetch(url, { cache: 'no-store' });
-  if (!res.ok) throw new Error(`Failed to fetch members list: ${res.status} (${url})`);
+  const res = await fetch(url, { cache: "no-store" });
+
+  if (!res.ok) {
+    console.warn(`Failed to fetch members list: ${res.status} (${url})`);
+    return { contents: [] };
+  }
 
   const data = await res.json();
-  return {
-    contents: (data?.docs ?? []).map(mapMemberDoc),
-    totalCount: data?.totalDocs ?? data?.total ?? 0,
-  };
+  return { contents: data.docs ?? [] };
 }
+

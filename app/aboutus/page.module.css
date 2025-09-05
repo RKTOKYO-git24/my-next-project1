@@ -3,33 +3,56 @@
   margin-bottom: 40px;
 }
 
+.notice {
+  text-align: center;
+  font-size: 4rem;
+  font-weight: bold;
+  color: crimson;
+  margin-bottom: 20px;
+}
+
 .list {
   display: flex;
-  align-items: flex-start;
-  gap: 40px;
-  margin-bottom: 80px;
+  align-items: center; /* 縦位置を中央揃え */
+  gap: 60px;
+  margin-bottom: 100px;
 }
 
 .list:nth-child(even) {
   flex-direction: row-reverse;
 }
+
 .image {
-  width: 240px;
+  width: 320px; /* 写真を大きく */
   height: auto;
   border-radius: var(--border-radius);
+  flex-shrink: 0; /* 小さく潰れないように */
+}
+
+.meta {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .name {
-  font-size: 1.2rem;
+  font-size: 2rem; /* 名前を大きく強調 */
   font-weight: bold;
+  margin-bottom: 12px;
 }
 
 .position {
-  margin-bottom: 8px;
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-bottom: 16px;
+  color: var(--color-text-sub); /* サブトーンで上品に */
 }
 
 .profile {
-  font-size: 0.9rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--color-text);
 }
 
 .footer {

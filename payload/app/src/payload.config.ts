@@ -10,6 +10,7 @@ import { lexicalEditor } from '@payloadcms/richtext-lexical';
 import { Users } from './collections/Users';
 import { Media } from './collections/Media';
 import { News } from './collections/News';
+import { Members } from "./collections/Members";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -24,7 +25,7 @@ export default buildConfig({
   },
 
   // 使用コレクション
-  collections: [Users, Media, News],
+  collections: [Users, Media, News, Members],
 
   // リッチテキスト（Lexical）
   editor: lexicalEditor(),
