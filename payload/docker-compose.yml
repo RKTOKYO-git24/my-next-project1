@@ -1,7 +1,6 @@
 # /home/ryotaro/dev/mnp-dw-20250821/payload/docker-compose.yml
 
 services:
-
   payload:
     build:
       context: ./app
@@ -15,25 +14,26 @@ services:
       - ../.env.local
 
     environment:
-      NODE_ENV: development
+      NODE_ENV: production
       NODE_OPTIONS: --max-old-space-size=1024
 
     restart: unless-stopped
 
-    ports: ["3100:3000"]
+    ports:
+      - "3100:3000"
+
     volumes:
-      - ./app:/usr/src/app:delegated
-      - node_modules_cache:/usr/src/app/node_modules
-      - ./media:/usr/src/app/media
+      - node_modules_cache:/usr/src/app/node_modules   # 依存キャッシュ（ビルド高速化）
+      - ./media:/usr/src/app/media                     # アップロードファイル永続化
 
     command: >
       sh -lc "
         if [ ! -d node_modules ] || [ -z \"$(ls -A node_modules 2>/dev/null)\" ]; then
-          (npm ci || npm install);
+          (npm ci || npm install --production);
         fi &&
         npx payload generate:types &&
         npx payload generate:importmap &&
-        npm run dev
+        npm run start
       "
 
     healthcheck:

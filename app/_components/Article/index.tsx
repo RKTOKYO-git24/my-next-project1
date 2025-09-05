@@ -1,4 +1,5 @@
 // /app/_components/Article/index.tsx
+
 import Image from "next/image";
 import type { News } from "@/app/_libs/payload";
 import type { RichTextContent } from "@/app/_libs/payload";
@@ -8,12 +9,10 @@ import Category from "../Category";
 
 type Props = { data: News };
 
-// 型ガード関数
 function isRichText(content: unknown): content is RichTextContent {
   return typeof content === "object" && content !== null && "root" in content;
 }
 
-// Category が要求する型に合わせて正規化（name を必ず用意）
 function toCategoryProp(
   cat: News["category"]
 ): string | { name: string; slug?: string } | undefined {
@@ -35,14 +34,23 @@ function safeDecode(url?: string | null) {
   }
 }
 
-export default function Article({ data }: Props) {
-  
-  const rawUrl = data.thumbnail?.url;
-  const src = safeDecode(rawUrl);
+// ✅ 相対URLに統一する処理を追加
+function toRelativePath(url?: string | null) {
+  if (!url) return undefined;
+  try {
+    const u = new URL(url, "http://dummy"); // dummy ベースで解析
+    return u.pathname + u.search; // /api/media/file/xxx.jpeg?…
+  } catch {
+    return url; // すでに相対ならそのまま
+  }
+}
 
-  // width/height が無い場合のフォールバック
-  const w = typeof data.thumbnail?.width === "number" ? data.thumbnail!.width! : 1200;
-  const h = typeof data.thumbnail?.height === "number" ? data.thumbnail!.height! : 630;
+export default function Article({ data }: Props) {
+  const t = data.thumbnail;
+  const src = t?.url ?? undefined;
+
+  const w = typeof t?.width === "number" ? t.width : 1200;
+  const h = typeof t?.height === "number" ? t.height : 630;
 
   const hasThumb = !!src;
   const categoryProp = toCategoryProp(data.category);
@@ -56,36 +64,44 @@ export default function Article({ data }: Props) {
           <DateComp date={data.publishedAt ?? data.createdAt} />
         </div>
 
-        {hasThumb && (
+        {hasThumb ? (
           <div className={styles.cover}>
             <Image
-              src={src!}
-              alt={data.thumbnail?.alt || data.title}
+              src={src}
+              alt={t?.alt || data.title}
               width={w}
               height={h}
               className={styles.image}
               priority
-              // 開発中だけ素早く切り分けしたいときは一時的に有効化:
-              // unoptimized
               sizes="(max-width: 768px) 100vw, 1200px"
+              unoptimized
+            />
+          </div>
+        ) : (
+          <div className={styles.cover}>
+            <Image
+              className={styles.image}
+              src="/no-image.png"
+              alt="No Image"
+              width={1200}
+              height={630}
+              unoptimized
             />
           </div>
         )}
       </header>
 
-     <section className={styles.body}>
-  {typeof data.content === "string" ? (
-    <div dangerouslySetInnerHTML={{ __html: data.content }} />
-  ) : isRichText(data.content) ? (
-    <div>
-      {data.content.root.children
-        .map((child) =>
-          child.children?.map((c) => c.text).join(" ")
-        )
-        .join("\n")}
-    </div>
-  ) : null}
-</section>
+      <section className={styles.body}>
+        {typeof data.content === "string" ? (
+          <div dangerouslySetInnerHTML={{ __html: data.content }} />
+        ) : isRichText(data.content) ? (
+          <div>
+            {data.content.root.children
+              .map((child) => child.children?.map((c) => c.text).join(" "))
+              .join("\n")}
+          </div>
+        ) : null}
+      </section>
     </article>
   );
 }

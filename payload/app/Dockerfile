@@ -1,20 +1,17 @@
-# ~/dev/mnp-dw-20250821/payload/app/Dockerfile
+# /home/ryotaro/dev/mnp-dw-20250821/payload/app/Dockerfile
 
-FROM node:22-alpine
-
-# Alpine でビルドに必要なツールを追加
-RUN apk add --no-cache python3 make g++ wget busybox-extras
+FROM node:20
 
 WORKDIR /usr/src/app
 
-# 依存キャッシュ用に package.json をコピーして一度だけ npm install
 COPY package*.json ./
-RUN npm ci || npm install
+RUN npm install --production
 
-# アプリ本体をコピー
 COPY . .
+
+# PayloadCMS (Next.js admin 含む) をビルド
+RUN npm run build
 
 EXPOSE 3000
 
-# devモード（ホットリロード有効）
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "start"]

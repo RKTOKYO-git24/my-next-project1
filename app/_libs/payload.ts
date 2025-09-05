@@ -29,9 +29,7 @@ function getOriginFromApiBase(apiBase: string): string {
 /** 任意のURL/パスを絶対URLにする。すでに絶対ならそのまま返す */
 function toAbsoluteURL(input: string): string {
   try {
-    // 既に absolute
-    // eslint-disable-next-line no-new
-    new URL(input);
+    new URL(input); // absolute URL 判定
     return input;
   } catch {
     const apiBase = getApiBase();
@@ -95,7 +93,7 @@ export type News = {
   revisedAt: string | null;
   createdAt: string | null;
   updatedAt: string | null;
-  content?: string | RichTextContent; // 👈 string または RichText JSON
+  content?: string | RichTextContent;
   category?: Category | null;
   status?: string;
 };
@@ -108,7 +106,6 @@ function mapNewsDoc(d: any): News {
   return {
     id: d.id,
     title: d.title,
-    // slug が無い記事は id を代用して必ず用意
     slug: d.slug || d?.fields?.slug || d.id,
     description: d.excerpt ?? d.description ?? '',
     thumbnail: tn
@@ -141,21 +138,21 @@ export async function getNewsList(params: {
   const { limit, page = 1, q, category } = params;
   const base = getApiBase();
   if (!base) throw new Error('Payload API base URL is not set');
-
-  const sp = new URLSearchParams();
-  sp.set('limit', String(limit));
-  sp.set('page', String(page));
-  sp.set('depth', '1'); // Media を展開
+    const sp = new URLSearchParams();
+    sp.set('limit', String(limit));
+    sp.set('page', String(page));
+    sp.set('depth', '1'); // Media を展開
 
   // 検索（title/description/content の OR）
+  // 検索条件を OR で構築
   if (q && q.trim()) {
-    sp.set('where[or][0][title][contains]', q);
-    sp.set('where[or][1][description][contains]', q);
-    sp.set('where[or][2][content][contains]', q);
-  }
+    const keyword = q.trim();
+    sp.append("where[or][0][title][like]", encodeURIComponent(keyword));
+    sp.append("where[or][1][description][like]", encodeURIComponent(keyword));
+    sp.append("where[or][2][content][like]", encodeURIComponent(keyword));
+}
 
   if (category) {
-    // collection のフィールド名に合わせて調整
     sp.set('where[category][equals]', category);
   }
 

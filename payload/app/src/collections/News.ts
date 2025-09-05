@@ -27,12 +27,8 @@ export const News: CollectionConfig = {
   fields: [
     { name: 'title', type: 'text', required: true },
     { name: 'slug', type: 'text', required: true, unique: true },
-    {
-      name: 'category',
-      type: 'select',
-      required: true,
-      defaultValue: 'update',
-      options: [
+    { name: 'description', type: 'textarea' },
+    { name: 'category', type: 'select', required: true, defaultValue: 'update', options: [
         { label: 'Technology', value: 'technology' },
         { label: 'Japan',      value: 'japan' },
         { label: 'U.S.A.',     value: 'usa' },
