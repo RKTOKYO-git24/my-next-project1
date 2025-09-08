@@ -31,7 +31,7 @@ export default buildConfig({
   editor: lexicalEditor(),
 
   // サーバーURL（メディアの絶対URL組み立てにも使われます）
-  serverURL: process.env.SERVER_URL || 'http://localhost:3100',
+  serverURL: process.env.SERVER_URL || 'https://cms.ryotkim.com',
 
   // セキュリティ
   secret: process.env.PAYLOAD_SECRET || '',
@@ -40,10 +40,12 @@ export default buildConfig({
   cors: [
     'http://localhost:3000',
     'http://localhost:3100',
+    'https://cms.ryotkim.com',
   ],
   csrf: [
     'http://localhost:3000',
     'http://localhost:3100',
+    'https://cms.ryotkim.com',
   ],
 
   // 画像処理
