@@ -24,7 +24,7 @@ services:
 
     volumes:
       - node_modules_cache:/usr/src/app/node_modules   # 依存キャッシュ（ビルド高速化）
-      - ./media:/usr/src/app/media                     # アップロードファイル永続化
+      - ./media:/usr/src/app/app/media                     # アップロードファイル永続化
 
     command: >
       sh -lc "

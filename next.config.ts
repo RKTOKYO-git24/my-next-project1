@@ -25,6 +25,13 @@ const nextConfig: NextConfig = {
         port: '3100',
         pathname: '/api/media/file/:path*',
       },
+      
+      // ✅ Payload (本番環境)
+      {
+        protocol: 'https',
+        hostname: 'cms.ryotkim.com',
+        pathname: '/api/media/file/:path*',
+      },
     ],
   },
 }
