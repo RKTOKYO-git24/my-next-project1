@@ -6,7 +6,7 @@ import { useEffect } from "react";
 
 export default function ErrorTrigger() {
   useEffect(() => {
-    throw new Error("Sentry クライアントテストエラー");
+    throw new Error("Sentry クライアントテストエラー2");
   }, []);
 
   return <p>エラーを発生させています...</p>;
