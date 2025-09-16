@@ -28,13 +28,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="ja">
       <head>
-        {/* ここにfaviconなどのlinkタグを入れる */}
+        {/* favicon など */}
         <link
           rel="apple-touch-icon"
           sizes="180x180"
@@ -53,7 +53,6 @@ export default function RootLayout({
           href="/favicon-16x16.png"
         />
         <link rel="icon" href="/favicon.ico" />
-        {/* <link rel="manifest" href="/site.webmanifest" /> */}
       </head>
       <body>
         <Header />

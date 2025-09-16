@@ -1,6 +1,4 @@
 // /home/ryotaro/dev/mnp-dw-20250821/app/page.tsx
-import ErrorTrigger from "./ErrorTrigger";
-
 
 import Image from "next/image";
 import styles from "./page.module.css";
@@ -18,9 +16,6 @@ export default async function Home() {
 
   return (
     <>
-     <section>
-        <ErrorTrigger />
-      </section>
       
       {/* ✅ 背景画像：固定配置で header の背後にも表示 */}
       <div className={styles.bgimgWrapper}>
