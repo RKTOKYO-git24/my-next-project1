@@ -34,8 +34,8 @@ export async function getAccessToken(): Promise<string> {
 });
 
 const text = await res.text();
-//console.log("🔑 Raw token response:", text);
-console.log("🔍 Raw response text:", text); // 👈 これ追加
+// console.log("🔑 Raw token response:", text);
+// console.log("🔍 Raw response text:", text); // 👈 これ追加
 const contentType = res.headers.get("content-type");
 
 if (!res.ok || !contentType || !contentType.includes("application/json")) {

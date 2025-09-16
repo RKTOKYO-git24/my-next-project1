@@ -1,3 +1,5 @@
+// /home/ryotaro/dev/mnp-dw-20250821/tsconfig.json
+
 {
   "compilerOptions": {
     "target": "ES2022", // ← ES2017 → ES2022へ推奨変更（React 19に適合）
@@ -39,7 +41,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "types/**/*.d.ts"
+    "types/**/*.d.ts",
+    "app" // For sentry.io
   ],
   "exclude": [
   "node_modules",

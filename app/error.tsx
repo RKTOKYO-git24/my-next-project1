@@ -9,12 +9,12 @@ export default function GlobalError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
-  console.error('GlobalError:', {
-    name: error.name,
-    message: error.message,
-    digest: (error as any).digest,
-    stack: error.stack,
-  });
+  // console.error('GlobalError:', {
+  //  name: error.name,
+  //  message: error.message,
+  //  digest: (error as any).digest,
+  //  stack: error.stack,
+  //});
 
   return (
     <div
