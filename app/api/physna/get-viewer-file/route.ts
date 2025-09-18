@@ -1,6 +1,6 @@
 // ✅ /app/api/physna/get-viewer-file/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { getAccessToken } from '@/lib/physna';
+import { getAccessToken } from 'legacy/physna-v2/physna';
 
 export async function GET(req: NextRequest) {
   const id = req.nextUrl.searchParams.get('id');

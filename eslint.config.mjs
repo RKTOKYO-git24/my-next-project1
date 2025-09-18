@@ -3,6 +3,8 @@
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import { FlatCompat } from "@eslint/eslintrc";
+import js from "@eslint/js";
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -34,6 +36,20 @@ const eslintConfig = [
       ],
       "@typescript-eslint/ban-ts-comment": "warn",
       "@typescript-eslint/no-empty-object-type": "warn",
+      // v2 ライブラリは基本禁止
+      "no-restricted-imports": [
+        "error",
+        {
+          "patterns": ["@physna-v2/*"]
+        }
+      ],
+    },
+  },
+  {
+    // 例外: v2 ページと API は許可
+    files: ["app/physna/**", "app/api/physna/**"],
+    rules: {
+      "no-restricted-imports": "off",
     },
   },
 ];

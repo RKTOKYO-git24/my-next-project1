@@ -31,9 +31,9 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./*"
-      ]
+      "@/*": ["./*"],
+      "@physna-v2/*": ["legacy/physna-v2/*"],
+      "@physna/*": ["lib/physna/*"]
     }
   },
   "include": [

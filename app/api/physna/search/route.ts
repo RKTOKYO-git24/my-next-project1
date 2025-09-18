@@ -1,7 +1,7 @@
 // /api/physna/search/route.ts
 
 import { NextResponse } from "next/server";
-import { getAccessToken } from "@/lib/physna";
+import { getAccessToken } from "legacy/physna-v2/physna";
 import { PhysnaModel, PhysnaItem } from "@/types/physna";
 
 

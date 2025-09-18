@@ -1,6 +1,6 @@
 // app/api/physna/models/[id]/matches/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { getAccessToken } from "@/lib/physna"; // ✅ 共通関数のインポート
+import { getAccessToken } from "legacy/physna-v2/physna"; // ✅ 共通関数のインポート
 
 export async function GET(
   req: NextRequest,
