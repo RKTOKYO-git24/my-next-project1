@@ -1,3 +1,5 @@
+// /home/ryotaro/dev/mnp-dw-20250821/app/layout.tsx
+
 import "./globals.css";
 import React from "react";
 import { GoogleAnalytics } from "@next/third-parties/google";
@@ -24,6 +26,14 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://www.ryotkim.com/",
   },
+  icons: {
+    icon: [
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon.ico" },
+    ],
+    apple: "/apple-touch-icon.png",
+  },
 };
 
 export default function RootLayout({
@@ -33,34 +43,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ja">
-      <head>
-        {/* favicon など */}
-        <link
-          rel="apple-touch-icon"
-          sizes="180x180"
-          href="/apple-touch-icon.png"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="32x32"
-          href="/favicon-32x32.png"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="16x16"
-          href="/favicon-16x16.png"
-        />
-        <link rel="icon" href="/favicon.ico" />
-      </head>
       <body>
         <Header />
         {children}
         <Footer />
         <Analytics />
+        <GoogleAnalytics gaId="1SVCPQJ5D7" />
       </body>
-      <GoogleAnalytics gaId="1SVCPQJ5D7" />
     </html>
   );
 }

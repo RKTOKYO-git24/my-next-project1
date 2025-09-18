@@ -1,8 +1,9 @@
 import Hero from "@/app/_components/Hero";
 import Sheet from "@/app/_components/Sheet";
 import React from "react";
+import type { Metadata } from "next";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Contact Me",
 };
 

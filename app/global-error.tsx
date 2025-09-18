@@ -9,11 +9,9 @@ export default function GlobalError({ error, reset }: { error: Error; reset: () 
   Sentry.captureException(error);
 
   return (
-    <html>
-      <body>
-        <h2>Something went wrong!</h2>
-        <button onClick={() => reset()}>Try again</button>
-      </body>
-    </html>
+    <div style={{ padding: "2rem" }}>
+      <h2>Something went wrong!</h2>
+      <button onClick={() => reset()}>Try again</button>
+    </div>
   );
 }
