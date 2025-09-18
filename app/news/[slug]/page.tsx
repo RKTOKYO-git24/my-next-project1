@@ -6,7 +6,7 @@ import { getNewsDetail } from "@/app/_libs/payload";
 import Article from "@/app/_components/Article";
 import ButtonLink from "@/app/_components/ButtonLink";
 import styles from "./page.module.css";
-import { normalizeError } from "@/app/_libs/utils";
+import { normalizeError } from "lib/utils";
 
 export const dynamic = "force-dynamic";
 export const fetchCache = "force-no-store";
