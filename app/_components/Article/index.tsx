@@ -1,8 +1,8 @@
 // /app/_components/Article/index.tsx
 
 import Image from "next/image";
-import type { News } from "@/app/_libs/payload";
-import type { RichTextContent } from "@/app/_libs/payload";
+import type { News } from "lib/payload";
+import type { RichTextContent } from "lib/payload";
 import styles from "./index.module.css";
 import DateComp from "../Date";
 import Category from "../Category";

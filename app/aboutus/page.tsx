@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { getMembersList } from "../_libs/payload";
+import { getMembersList } from "lib/payload";
 import styles from "./page.module.css";
 
 // URL が二重エンコードされている場合(%2520など)を安全に戻す

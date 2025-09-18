@@ -2,7 +2,7 @@
 
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getNewsDetail } from "@/app/_libs/payload";
+import { getNewsDetail } from "lib/payload";
 import Article from "@/app/_components/Article";
 import ButtonLink from "@/app/_components/ButtonLink";
 import styles from "./page.module.css";

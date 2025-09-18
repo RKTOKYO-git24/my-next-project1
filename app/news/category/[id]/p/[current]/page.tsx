@@ -1,6 +1,6 @@
 // /app/news/category/[id]/p/[current]/page.tsx
 import { notFound } from "next/navigation";
-import { getNewsList } from "@/app/_libs/payload";
+import { getNewsList } from "lib/payload";
 import NewsList from "@/app/_components/NewsList";
 import Pagination from "@/app/_components/Pagination";
 import Category from "@/app/_components/Category";

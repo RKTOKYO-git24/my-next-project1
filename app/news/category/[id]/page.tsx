@@ -1,7 +1,7 @@
 // /home/ryotaro/dev/mnp-dw-20250821/app/news/category/[id]/page.tsx
 
 import { notFound } from "next/navigation";
-import { getNewsList } from "@/app/_libs/payload"; // ← microcms ではなく payload を使う
+import { getNewsList } from "lib/payload"; // ← microcms ではなく payload を使う
 import NewsList from "@/app/_components/NewsList";
 import Pagination from "@/app/_components/Pagination";
 import Category from "@/app/_components/Category";

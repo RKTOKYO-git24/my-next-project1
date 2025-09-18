@@ -1,6 +1,6 @@
 // /home/ryotaro/dev/mnp-dw-20250821/app/news/page.tsx
 
-import { getNewsList } from "@/app/_libs/payload";
+import { getNewsList } from "lib/payload";
 import NewsList from "@/app/_components/NewsList";
 import Pagination from "../_components/Pagination";
 import SearchField from "@/app/_components/SearchField";

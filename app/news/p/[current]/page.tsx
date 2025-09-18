@@ -1,7 +1,7 @@
 // /home/ryotaro/dev/mnp-dw-20250821/app/news/p/[current]/page.tsx
 
 import { notFound } from "next/navigation";
-import { getNewsList } from "@/app/_libs/payload"; // ← payload版を使う
+import { getNewsList } from "lib/payload"; // ← payload版を使う
 import NewsList from "@/app/_components/NewsList";
 import Pagination from "@/app/_components/Pagination";
 import { NEWS_LIST_LIMIT } from "@/app/_constants";
