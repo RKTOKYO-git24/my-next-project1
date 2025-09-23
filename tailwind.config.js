@@ -1,3 +1,4 @@
+// /home/ryotaro/dev/mnp-dw-20250821/tailwind.config.js
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
