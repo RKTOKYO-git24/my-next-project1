@@ -48,7 +48,7 @@ export default function PhysnaAssetDetailPage() {
         onClick={() => alert(`matches for ${asset.id}`)}
         className="bg-blue-500 text-white px-4 py-2 rounded"
       >
-        matches
+        =matches=
       </button>
 
       <div className="text-sm text-gray-600">
