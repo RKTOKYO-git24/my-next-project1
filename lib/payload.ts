@@ -4,15 +4,41 @@
 // 環境変数
 // ------------------------------
 // 例:
-//   NEXT_PUBLIC_PAYLOAD_API=http://localhost:3100/api
-//   NEXT_SERVER_PAYLOAD_API=http://payload:3000/api
+//   NEXT_PUBLIC_PAYLOAD_API=https://cms.ryotkim.com/api
+//   NEXT_SERVER_PAYLOAD_API=http://payload:3000/api  // ← 本番で内部ホストの場合は自動で無効化（フォールバック）
 // ==============================
 
-/** APIベース（.../api の形を想定）を返す。未設定なら null */
+/** APIベース（.../api の形を想定）を返す。未設定なら null
+ *
+ * 本番サーバーで localhost / payload 系のサーバーURLが入っていると外部VMに到達できず失敗する。
+ * .env をいじらず安全に動かすため、そういう値は「無効」とみなし、NEXT_PUBLIC を優先する。
+ */
 function getApiBase(): string | null {
-  const pub = process.env.NEXT_PUBLIC_PAYLOAD_API?.replace(/\/$/, '') || null;
-  const svr = process.env.NEXT_SERVER_PAYLOAD_API?.replace(/\/$/, '') || null;
-  if (typeof window === 'undefined') return svr || pub;
+  const strip = (v?: string | null) => (v ? v.replace(/\/$/, "") : null);
+  const pub = strip(process.env.NEXT_PUBLIC_PAYLOAD_API) || null;
+  const svrRaw = strip(process.env.NEXT_SERVER_PAYLOAD_API) || null;
+
+  const looksInternal = (u: string): boolean => {
+    try {
+      const { hostname } = new URL(u);
+      return (
+        hostname === "localhost" ||
+        hostname === "127.0.0.1" ||
+        hostname === "payload" ||
+        hostname === "payload-app"
+      );
+    } catch {
+      // URL として不正ならサーバーURLは使わない
+      return true;
+    }
+  };
+
+  if (typeof window === "undefined") {
+    // サーバーでは「健全な svr ＞ pub」。内部向け（到達不能）と判断したら pub にフォールバック
+    const svr = svrRaw && !looksInternal(svrRaw) ? svrRaw : null;
+    return svr || pub;
+  }
+  // クライアントは常に公開URLのみ
   return pub;
 }
 
@@ -22,7 +48,7 @@ function getOriginFromApiBase(apiBase: string): string {
     const u = new URL(apiBase);
     return `${u.protocol}//${u.host}`;
   } catch {
-    return apiBase.replace(/\/api$/, '');
+    return apiBase.replace(/\/api$/, "");
   }
 }
 
@@ -35,7 +61,7 @@ function toAbsoluteURL(input: string): string {
     const apiBase = getApiBase();
     if (!apiBase) return input;
     const origin = getOriginFromApiBase(apiBase);
-    const p = input.startsWith('/') ? input : `/${input}`;
+    const p = input.startsWith("/") ? input : `/${input}`;
     return origin + p;
   }
 }
@@ -107,16 +133,17 @@ function mapNewsDoc(d: any): News {
     id: d.id,
     title: d.title,
     slug: d.slug || d?.fields?.slug || d.id,
-    description: d.excerpt ?? d.description ?? '',
+    description: d.excerpt ?? d.description ?? "",
     thumbnail: tn
       ? {
           url: imageUrl(tn),
-          alt: tn.alt ?? '',
+          alt: tn.alt ?? "",
           width: tn.width ?? 1200,
           height: tn.height ?? 630,
         }
       : undefined,
-    publishedAt: d.publishedDate ?? d.publishedAt ?? d.createdAt ?? d.updatedAt ?? null,
+    publishedAt:
+      d.publishedDate ?? d.publishedAt ?? d.createdAt ?? d.updatedAt ?? null,
     revisedAt: d.updatedAt ?? null,
     createdAt: d.createdAt ?? null,
     updatedAt: d.updatedAt ?? null,
@@ -137,28 +164,30 @@ export async function getNewsList(params: {
 }): Promise<{ contents: News[]; totalCount: number }> {
   const { limit, page = 1, q, category } = params;
   const base = getApiBase();
-  if (!base) throw new Error('Payload API base URL is not set');
-    const sp = new URLSearchParams();
-    sp.set('limit', String(limit));
-    sp.set('page', String(page));
-    sp.set('depth', '1'); // Media を展開
+  if (!base) throw new Error("Payload API base URL is not set");
+
+  const sp = new URLSearchParams();
+  sp.set("limit", String(limit));
+  sp.set("page", String(page));
+  sp.set("depth", "1"); // Media を展開
 
   // 検索（title/description/content の OR）
-  // 検索条件を OR で構築
   if (q && q.trim()) {
     const keyword = q.trim();
-    sp.append("where[or][0][title][like]", encodeURIComponent(keyword));
-    sp.append("where[or][1][description][like]", encodeURIComponent(keyword));
-    sp.append("where[or][2][content][like]", encodeURIComponent(keyword));
-}
+    // URLSearchParams が自動エンコードするため encodeURIComponent は不要
+    sp.append("where[or][0][title][like]", keyword);
+    sp.append("where[or][1][description][like]", keyword);
+    sp.append("where[or][2][content][like]", keyword);
+  }
 
   if (category) {
-    sp.set('where[category][equals]', category);
+    sp.set("where[category][equals]", category);
   }
 
   const url = `${base}/news?${sp.toString()}`;
-  const res = await fetch(url, { cache: 'no-store' });
-  if (!res.ok) throw new Error(`Failed to fetch news list: ${res.status} (${url})`);
+  const res = await fetch(url, { cache: "no-store" });
+  if (!res.ok)
+    throw new Error(`Failed to fetch news list: ${res.status} (${url})`);
 
   const data = await res.json();
   return {
@@ -169,21 +198,21 @@ export async function getNewsList(params: {
 
 export async function getNewsDetail(slug: string): Promise<News | null> {
   const base = getApiBase();
-  if (!base) throw new Error('Payload API base URL is not set');
+  if (!base) throw new Error("Payload API base URL is not set");
 
   const sp = new URLSearchParams();
-  sp.set('where[slug][equals]', slug);
-  sp.set('depth', '1');
+  sp.set("where[slug][equals]", slug);
+  sp.set("depth", "1");
 
   const url = `${base}/news?${sp.toString()}`;
-  const res = await fetch(url, { cache: 'no-store' });
-  if (!res.ok) throw new Error(`Failed to fetch news detail: ${res.status} (${url})`);
+  const res = await fetch(url, { cache: "no-store" });
+  if (!res.ok)
+    throw new Error(`Failed to fetch news detail: ${res.status} (${url})`);
 
   const data = await res.json();
   const doc = (data?.docs ?? [])[0];
   return doc ? mapNewsDoc(doc) : null;
 }
-
 
 export async function getMembersList(params: { limit: number }) {
   const base = getApiBase();
@@ -205,4 +234,3 @@ export async function getMembersList(params: { limit: number }) {
   const data = await res.json();
   return { contents: data.docs ?? [] };
 }
-
