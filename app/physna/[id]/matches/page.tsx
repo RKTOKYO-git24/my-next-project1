@@ -14,7 +14,7 @@ interface RawPhysnaMatch {
 
 export default async function MatchPage({ params }: MatchPageProps) {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_SITE_URL}/api/physna/models/${params.id}/matches`,
+    `${process.env.NEXT_PUBLIC_SITE_URL}/api/legacy/physna-v2/models/${params.id}/matches`,
     { cache: "no-store" }
   );
   const data = await res.json();

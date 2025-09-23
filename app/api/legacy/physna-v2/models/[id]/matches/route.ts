@@ -1,4 +1,5 @@
-// app/api/physna/models/[id]/matches/route.ts
+// /home/ryotaro/dev/mnp-dw-20250821/app/api/legacy/physna-v2/models/[id]/matches/route.ts
+
 import { NextRequest, NextResponse } from "next/server";
 import { getAccessToken } from "legacy/physna-v2/physna"; // ✅ 共通関数のインポート
 
@@ -19,7 +20,7 @@ export async function GET(
         headers: {
           Authorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json",
-          "X-PHYSNA-TENANTID": process.env.PHYSNA_TENANT_ID ?? "",
+          "X-PHYSNA-TENANTID": process.env.PHYSNA_V2_TENANT_ID ?? "",
         },
       }
     );

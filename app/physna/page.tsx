@@ -1,3 +1,5 @@
+// /home/ryotaro/dev/mnp-dw-20250821/app/physna/page.tsx
+
 "use client";
 
 import { useState } from "react";
@@ -19,7 +21,7 @@ export default function PhysnaPage() {
     setError("");
 
     try {
-      const res = await fetch("/api/physna/search", {
+      const res = await fetch("/api/legacy/physna-v2/search", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ query }),
@@ -45,6 +47,7 @@ export default function PhysnaPage() {
   if (view === "search") {
     return (
       <div className="p-6 bg-white min-h-screen">
+  
         <h1 className="text-3xl font-bold text-green-700 mb-4">Physna Search</h1>
         <p className="text-gray-600 mb-6">
           This is a prototype interface for internal evaluation and feedback.

@@ -33,7 +33,7 @@
     "paths": {
       "@/*": ["./*"],
       "@physna-v2/*": ["legacy/physna-v2/*"],
-      "@physna/*": ["lib/physna/*"]
+      "@physna/*": ["lib/physna-v3/*"]
     }
   },
   "include": [
@@ -42,8 +42,8 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "types/**/*.d.ts",
-    "app" // For sentry.io
-  ],
+    "app", // For sentry.io
+    "postcss.cofig.cjs"  ],
   "exclude": [
   "node_modules",
   ".next",

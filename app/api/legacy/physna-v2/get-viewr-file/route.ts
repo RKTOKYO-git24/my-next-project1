@@ -1,4 +1,5 @@
-// ✅ /app/api/physna/get-viewer-file/route.ts
+// /home/ryotaro/dev/mnp-dw-20250821/app/api/legacy/physna-v2/get-viewr-file/route.ts
+
 import { NextRequest, NextResponse } from 'next/server';
 import { getAccessToken } from 'legacy/physna-v2/physna';
 

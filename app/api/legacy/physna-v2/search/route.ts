@@ -1,4 +1,4 @@
-// /api/physna/search/route.ts
+// /home/ryotaro/dev/mnp-dw-20250821/app/api/legacy/physna-v2/search/route.ts
 
 import { NextResponse } from "next/server";
 import { getAccessToken } from "legacy/physna-v2/physna";
@@ -15,7 +15,7 @@ export async function POST(request: Request) {
 
     const token = await getAccessToken();
 
-    const url = new URL(`${process.env.PHYSNA_API_BASE}/models`);
+    const url = new URL(`${process.env.PHYSNA_V2_API_BASE}/models`);
     url.searchParams.set("search", query);
 
     const res = await fetch(url.toString(), {

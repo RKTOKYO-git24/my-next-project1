@@ -25,7 +25,19 @@ const nextConfig: NextConfig = {
         pathname: "/api/media/file/:path*",
       },
     ],
+    
+  },
+ // rewrites for legacy redirect
+  async rewrites() {
+    return [
+      // v2 legacy へのリダイレクト的ルーティング
+      {
+        source: "/api/physna/:path*",
+        destination: "/api/legacy/physna-v2/:path*",
+      },
+    ];
   },
 };
+
 
 export default withSentryConfig(nextConfig, { silent: true });

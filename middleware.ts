@@ -27,5 +27,13 @@ export function middleware(request: NextRequest) {
 
 // ★ /physna と /physna/... だけに適用
 export const config = {
-  matcher: ['/physna', '/physna/:path*'],
+  matcher: [
+    '/physna', '/physna/:path*', 
+// ↓ 旧 v2 (もしまだ残すなら) と新 v2 legacy の両方を保護
+    '/api/physna/:path*',
+    '/api/legacy/physna-v2/:path*',
+// v3 UIのBASIC認証での保護
+    '/physna-v3', '/physna-v3/:path*',
+    '/api/physna-v3/:path*',
+  ],
 }
