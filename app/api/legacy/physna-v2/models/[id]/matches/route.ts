@@ -1,45 +1,68 @@
 // /home/ryotaro/dev/mnp-dw-20250821/app/api/legacy/physna-v2/models/[id]/matches/route.ts
 
-import { NextRequest, NextResponse } from "next/server";
-import { getAccessToken } from "legacy/physna-v2/physna"; // ✅ 共通関数のインポート
+import { NextResponse } from "next/server";
+import { getAccessToken } from "legacy/physna-v2/physna";
 
 export async function GET(
-  req: NextRequest,
-  context: { params: { id: string } }
+  req: Request,
+  { params }: { params: { id: string } }
 ) {
-  const { id } = context.params;
-
-  console.log("🔍 Fetching matches for ID:", id);
+  const { id } = params;
+  if (!id) {
+    return NextResponse.json({ error: "Missing ID" }, { status: 400 });
+  }
 
   try {
-    const accessToken = await getAccessToken(); // ✅ アクセストークンを取得
+    const token = await getAccessToken();
+    console.log("🟢 Using token:", token.slice(0, 20) + "...");
 
-    const res = await fetch(
-      `https://api.physna.com/v2/models/${id}/matches?threshold=0.8&page=1&perPage=20`,
-      {
+    // ✅ まずは従来の /models/{id}/matches を試す
+    let url = `https://api.physna.com/v2/models/${id}/matches`;
+    let res = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+      },
+    });
+
+    // ❌ 401 Unauthorized の場合は /matches?modelId=xxx を試す
+    if (res.status === 401) {
+      console.warn("⚠️ Falling back to /matches?modelId endpoint");
+      url = `https://api.physna.com/v2/matches?modelId=${id}`;
+      res = await fetch(url, {
         headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-          "X-PHYSNA-TENANTID": process.env.PHYSNA_V2_TENANT_ID ?? "",
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
         },
-      }
-    );
+      });
+    }
 
     const text = await res.text();
-    const contentType = res.headers.get("content-type");
+    console.log("🔑 Physna API response:", res.status, text);
 
-    if (!res.ok || !contentType?.includes("application/json")) {
-      console.error("❌ Physna API error:", text);
+    if (!res.ok) {
       return NextResponse.json({ error: text }, { status: res.status });
     }
 
-    const data = JSON.parse(text);
-    console.log("✅ Physna API raw response:", JSON.stringify(data, null, 2));
+    let data: any;
+    try {
+      data = JSON.parse(text);
+    } catch {
+      return NextResponse.json(
+        { error: "Invalid JSON from Physna API", raw: text },
+        { status: 500 }
+      );
+    }
 
-    return NextResponse.json(data, { status: 200 });
-
-  } catch (err) {
-    const message = err instanceof Error ? err.message : String(err);
-    return NextResponse.json({ error: `Unexpected error: ${message}` }, { status: 500 });
+    // ✅ matches のみ返す（フロント側がシンプルに扱えるように）
+    return NextResponse.json({
+      matches: data.matches ?? [],
+    });
+  } catch (err: any) {
+    console.error("❌ Internal error:", err);
+    return NextResponse.json(
+      { error: err.message ?? "Unknown error" },
+      { status: 500 }
+    );
   }
 }

@@ -33,7 +33,8 @@
     "paths": {
       "@/*": ["./*"],
       "@physna-v2/*": ["legacy/physna-v2/*"],
-      "@physna/*": ["lib/physna-v3/*"]
+      "@physna/*": ["lib/physna-v3/*"],
+      "@legacy/*": ["legacy/*"]
     }
   },
   "include": [
