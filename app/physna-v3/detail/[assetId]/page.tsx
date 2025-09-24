@@ -3,13 +3,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter  } from "next/navigation";
 
 export default function PhysnaAssetDetailPage() {
   const params = useParams();
   const assetId = (params as { assetId?: string })?.assetId; // 👈 型を安全に取得
   const [asset, setAsset] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     if (!assetId) return;
@@ -41,14 +42,17 @@ export default function PhysnaAssetDetailPage() {
       />
 
       <h1 className="text-lg font-bold">{asset.name || asset.path}</h1>
-      <p className="text-sm text-gray-600">UUID: {asset.id}</p>
+      <p className="text-sm text-gray-600">UUID (API): {asset.id}</p>
+      <p className="text-sm text-gray-600">UUID (URL): {assetId}</p>
       <p className="text-sm text-gray-600">状態: {asset.state}</p>
-
+      
       <button
-        onClick={() => alert(`matches for ${asset.id}`)}
+        onClick={() =>
+          router.push(`/physna-v3/search?assetId=${assetId}&threshold=80`)
+      }
         className="bg-blue-500 text-white px-4 py-2 rounded"
       >
-        =matches=
+        Find Matches
       </button>
 
       <div className="text-sm text-gray-600">

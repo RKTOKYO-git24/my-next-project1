@@ -1,10 +1,68 @@
+// /app/physna-v3/folder/[id]/page.tsx
+
 "use client";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 
-export default function PhysnaBrowserPage() {
-  const [contents, setContents] = useState<any[]>([]);
+// パンくずリスト
+function Breadcrumbs({ folderId }: { folderId: string }) {
+  const [crumbs, setCrumbs] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchBreadcrumbs = async () => {
+      let currentId: string | null = folderId;
+      const stack: any[] = [];
+
+      try {
+        while (currentId) {
+          const res = await fetch(`/api/physna-v3/folders/${currentId}`);
+          if (!res.ok) break;
+          const data = await res.json();
+          stack.unshift(data); // 先頭に追加
+          currentId = data.parentFolderId || null;
+        }
+      } catch (e) {
+        console.error("Breadcrumb fetch error:", e);
+      }
+
+      // Home を先頭に追加
+      setCrumbs([{ id: "root", name: "Home" }, ...stack]);
+    };
+
+    fetchBreadcrumbs();
+  }, [folderId]);
+
+  return (
+    <nav className="mb-4 text-sm text-gray-700">
+      {crumbs.map((c, i) => (
+        <span key={c.id}>
+          {i > 0 && " / "}
+          {c.id === "root" ? (
+            <Link href="/physna-v3" className="text-blue-600 hover:underline">
+              {c.name}
+            </Link>
+          ) : (
+            <Link
+              href={`/physna-v3/folder/${c.id}`}
+              className="text-blue-600 hover:underline"
+            >
+              {c.name}
+            </Link>
+          )}
+        </span>
+      ))}
+    </nav>
+  );
+}
+
+export default function FolderContentsPage() {
+  const params = useParams<{ id: string }>();
+  const folderId = params.id;
+
+  const [folders, setFolders] = useState<any[]>([]);
+  const [assets, setAssets] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
@@ -13,11 +71,22 @@ export default function PhysnaBrowserPage() {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`/api/physna-v3/assets?page=${page}&perPage=20`);
-        if (!res.ok) throw new Error("Failed to fetch contents");
+        const res = await fetch(
+          `/api/physna-v3/folders/${folderId}/contents?page=${page}`
+        );
+        if (!res.ok) throw new Error("Failed to fetch folder contents");
         const data = await res.json();
-        setContents(data.contents || []);
-        setHasMore((data.pageData?.endIndex || 0) < (data.pageData?.total || 0));
+
+        const folderItems = (data.contents || []).filter(
+          (c: any) => c.contentType === "folder"
+        );
+        const assetItems = (data.contents || []).filter(
+          (c: any) => c.contentType === "asset"
+        );
+
+        setFolders(folderItems);
+        setAssets(assetItems);
+        setHasMore(page < (data.pageData?.lastPage || 1));
       } catch (err) {
         console.error(err);
       } finally {
@@ -25,22 +94,22 @@ export default function PhysnaBrowserPage() {
       }
     };
     fetchData();
-  }, [page]);
+  }, [folderId, page]);
 
   if (loading) return <p className="p-6">Loading...</p>;
 
-  const folders = contents.filter((c) => c.contentType === "folder");
-  const assets = contents.filter((c) => c.contentType === "asset");
-
   return (
     <main className="p-6">
-      <h1 className="text-xl font-bold mb-4">Physna v3 Browser (Home)</h1>
+      {/* パンくずリスト */}
+      <Breadcrumbs folderId={folderId} />
+
+      <h1 className="text-xl font-bold mb-4">Folder Contents</h1>
 
       {/* フォルダ一覧 */}
       <section className="mb-8">
         <h2 className="text-lg font-semibold mb-2">📂 Folders</h2>
         {folders.length === 0 ? (
-          <p>No folders found.</p>
+          <p>No subfolders found.</p>
         ) : (
           <ul className="grid gap-2">
             {folders.map((folder) => (
@@ -77,7 +146,6 @@ export default function PhysnaBrowserPage() {
                   key={asset.id}
                   className="border rounded-lg p-3 shadow-sm bg-white flex flex-col"
                 >
-                  {/* サムネイル */}
                   <Link href={detailUrl}>
                     <img
                       src={`/api/physna-v3/thumbnail/${asset.id}`}
@@ -85,16 +153,12 @@ export default function PhysnaBrowserPage() {
                       className="w-full h-40 object-contain mb-2 bg-gray-100"
                     />
                   </Link>
-
-                  {/* ファイル名 */}
                   <Link
                     href={detailUrl}
                     className="font-medium break-words mb-1"
                   >
                     {asset.name || asset.path?.split("/").pop()}
                   </Link>
-
-                  {/* ASM / State */}
                   <div className="text-sm text-gray-600 mb-2">
                     {asset.isAssembly && <span className="mr-2">🔧 ASM</span>}
                     状態: {asset.state}
@@ -115,9 +179,7 @@ export default function PhysnaBrowserPage() {
         >
           ← 前へ
         </button>
-
         <span className="px-4 py-2">Page {page}</span>
-
         <button
           disabled={!hasMore}
           onClick={() => setPage((p) => p + 1)}
