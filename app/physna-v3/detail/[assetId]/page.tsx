@@ -1,9 +1,7 @@
-// /home/ryotaro/dev/mnp-dw-20250821/app/physna-v3/detail/[assetId]/page.tsx
-
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams, useRouter  } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 export default function PhysnaAssetDetailPage() {
   const params = useParams();
@@ -34,9 +32,17 @@ export default function PhysnaAssetDetailPage() {
 
   return (
     <main className="p-6 space-y-4">
+      {/* 戻るボタン */}
+      <button
+        onClick={() => router.push("/physna-v3")}
+        className="bg-gray-500 text-white px-4 py-2 rounded"
+      >
+        Home
+      </button>
+
       {/* サムネイル */}
       <img
-        src={`/api/physna-v3/thumbnail/${assetId}`} // 👈 asset.id ではなく assetId を直指定
+        src={`/api/physna-v3/thumbnail/${assetId}`}
         alt={asset.name || asset.path}
         className="w-full h-60 object-contain bg-gray-100"
       />
@@ -45,11 +51,11 @@ export default function PhysnaAssetDetailPage() {
       <p className="text-sm text-gray-600">UUID (API): {asset.id}</p>
       <p className="text-sm text-gray-600">UUID (URL): {assetId}</p>
       <p className="text-sm text-gray-600">状態: {asset.state}</p>
-      
+
       <button
         onClick={() =>
           router.push(`/physna-v3/search?assetId=${assetId}&threshold=80`)
-      }
+        }
         className="bg-blue-500 text-white px-4 py-2 rounded"
       >
         Find Matches
@@ -63,12 +69,13 @@ export default function PhysnaAssetDetailPage() {
         )}
       </div>
 
-      <a
-        href={`/api/physna-v3/assets/${asset.id}/file`}
+      {/* 3D-Viewボタンに変更 */}
+      <button
+        onClick={() => router.push(`/physna-v3/view/${assetId}`)}
         className="inline-block bg-green-500 text-white px-4 py-2 rounded"
       >
-        Download File
-      </a>
+        3D-View
+      </button>
     </main>
   );
 }

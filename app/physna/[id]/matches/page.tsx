@@ -3,7 +3,7 @@ import { PhysnaMatch, PhysnaModel } from "@/types/physna";
 import Link from "next/link";
 
 interface MatchPageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>; // 👈 Promise 型に変更
 }
 
 interface RawPhysnaMatch {
@@ -11,14 +11,14 @@ interface RawPhysnaMatch {
   matchPercentage: number;
 }
 
-export default async function MatchPage({ params }: MatchPageProps) {
-  const { id } = params;
+export default async function MatchPage(props: MatchPageProps) {
+  // ✅ await で Promise を解決
+  const { id } = await props.params;
 
   let matches: PhysnaMatch[] = [];
   let errorMessage: string | null = null;
 
   try {
-    // ✅ 相対URLに変更
     const res = await fetch(
       `/api/legacy/physna-v2/models/${id}/matches`,
       { cache: "no-store" }

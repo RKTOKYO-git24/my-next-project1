@@ -1,4 +1,4 @@
-// /app/physna-v3/folder/[id]/page.tsx
+// /home/ryotaro/dev/mnp-dw-20250821/app/physna-v3/folder/[id]/page.tsx
 
 "use client";
 
@@ -37,7 +37,7 @@ function Breadcrumbs({ folderId }: { folderId: string }) {
   return (
     <nav className="mb-4 text-sm text-gray-700">
       {crumbs.map((c, i) => (
-        <span key={c.id}>
+        <span key={`${c.id}-${i}`}>
           {i > 0 && " / "}
           {c.id === "root" ? (
             <Link href="/physna-v3" className="text-blue-600 hover:underline">
