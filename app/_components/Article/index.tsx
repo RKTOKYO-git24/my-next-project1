@@ -1,17 +1,12 @@
-// /app/_components/Article/index.tsx
-
 import Image from "next/image";
 import type { News } from "lib/payload";
-import type { RichTextContent } from "lib/payload";
 import styles from "./index.module.css";
 import DateComp from "../Date";
 import Category from "../Category";
+import ReactMarkdown from "react-markdown";
+import { RichText } from "@payloadcms/richtext-lexical/react";
 
 type Props = { data: News };
-
-function isRichText(content: unknown): content is RichTextContent {
-  return typeof content === "object" && content !== null && "root" in content;
-}
 
 function toCategoryProp(
   cat: News["category"]
@@ -21,28 +16,6 @@ function toCategoryProp(
   const name = cat.name ?? cat.title ?? cat.slug;
   if (!name) return undefined;
   return { name, slug: cat.slug };
-}
-
-// URL が二重エンコードされている場合(%2520など)を安全に戻す
-function safeDecode(url?: string | null) {
-  if (!url) return undefined;
-  try {
-    const once = decodeURI(url);
-    return once.includes("%") ? decodeURI(once) : once;
-  } catch {
-    return url;
-  }
-}
-
-// ✅ 相対URLに統一する処理を追加
-function toRelativePath(url?: string | null) {
-  if (!url) return undefined;
-  try {
-    const u = new URL(url, "http://dummy"); // dummy ベースで解析
-    return u.pathname + u.search; // /api/media/file/xxx.jpeg?…
-  } catch {
-    return url; // すでに相対ならそのまま
-  }
 }
 
 export default function Article({ data }: Props) {
@@ -91,16 +64,13 @@ export default function Article({ data }: Props) {
         )}
       </header>
 
+      {/* ✅ 本文を RichText or Markdown として描画 */}
       <section className={styles.body}>
         {typeof data.content === "string" ? (
-          <div dangerouslySetInnerHTML={{ __html: data.content }} />
-        ) : isRichText(data.content) ? (
-          <div>
-            {data.content.root.children
-              .map((child) => child.children?.map((c) => c.text).join(" "))
-              .join("\n")}
-          </div>
-        ) : null}
+          <ReactMarkdown>{data.content}</ReactMarkdown>
+        ) : (
+          <RichText data={data.content as any} />
+        )}
       </section>
     </article>
   );

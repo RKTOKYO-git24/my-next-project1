@@ -38,7 +38,7 @@ export const News: CollectionConfig = {
     },
     { name: 'publishedDate', type: 'date' },
     { name: 'excerpt',       type: 'textarea' },
-    { name: 'content',       type: 'textarea' },
+    { name: 'content',       type: 'richText' },
     { name: 'externalId',    type: 'text' },
     { name: 'thumbnail',     type: 'upload', relationTo: 'media', required: true },
     {

@@ -1,4 +1,5 @@
 // /payload/app/src/payload.config.ts
+
 import { buildConfig } from 'payload';
 import { fileURLToPath } from 'url';
 import path from 'path';
