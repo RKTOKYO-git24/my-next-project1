@@ -27,7 +27,7 @@ export default function Menu() {
             </Link>
           </li>
           <li>
-            <Link href="/aboutus" onClick={handleLinkClick}>
+            <Link href="/about" onClick={handleLinkClick}>
               ABOUT
             </Link>
           </li>

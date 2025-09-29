@@ -10,7 +10,7 @@ export default function Footer() {
             <Link href="/news">NEWS</Link>
           </li>
           <li className={styles.item}>
-            <Link href="/aboutus">ABOUT</Link>
+            <Link href="/about">ABOUT</Link>
           </li>
           <li className={styles.item}>
             <Link href="/contact">CONTACT</Link>

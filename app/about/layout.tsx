@@ -1,4 +1,4 @@
-// /home/ryotaro/dev/mnp-dw-20250821/app/aboutus/layout.tsx
+// /home/ryotaro/dev/mnp-dw-20250821/app/about/layout.tsx
 
 import React from "react";
 import Sheet from "@/app/_components/Sheet";
