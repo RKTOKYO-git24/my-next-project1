@@ -32,12 +32,10 @@ export default async function Home() {
       <section className={styles.top}>
         <div className={styles.topContent}>
           <h1 className={styles.title}>
-            Engineering Reality to Bring Your Visions to Life.
+            Experimental Frontend & API Playground
           </h1>
           <p className={styles.description}>
-            Our mission is to combine expertise and technology to create
-            advanced solutions. Our vision is to turn possibilities into
-            reality, inspired by human imagination.
+            A private portfolio site to test integrations with various APIs and headless CMS solutions, and to experiment with frontend customization.
           </p>
         </div>
       </section>
