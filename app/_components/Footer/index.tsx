@@ -7,17 +7,17 @@ export default function Footer() {
       <nav className={styles.nav}>
         <ul className={styles.items}>
           <li className={styles.item}>
-            <Link href="/news">News</Link>
+            <Link href="/news">NEWS</Link>
           </li>
           <li className={styles.item}>
-            <Link href="/aboutus">About Us</Link>
+            <Link href="/aboutus">ABOUT</Link>
           </li>
           <li className={styles.item}>
-            <Link href="/contact">Contact Us</Link>
+            <Link href="/contact">CONTACT</Link>
           </li>
         </ul>
       </nav>
-      <p className={styles.cr}>© SNA-KIMURA. All Rights Reserved 2025</p>
+      <p className={styles.cr}>© RYOTKIM.COM All Rights Reserved 2025</p>
     </footer>
   );
 }

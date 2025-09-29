@@ -28,12 +28,12 @@ export default function Menu() {
           </li>
           <li>
             <Link href="/aboutus" onClick={handleLinkClick}>
-              ABOUT US
+              ABOUT
             </Link>
           </li>
           <li>
             <Link href="/contact" onClick={handleLinkClick}>
-              CONTACT US
+              CONTACT
             </Link>
           </li>
         </ul>

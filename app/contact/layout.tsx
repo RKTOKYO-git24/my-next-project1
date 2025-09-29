@@ -4,7 +4,7 @@ import React from "react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Contact Me",
+  title: "Get in Touch",
 };
 
 type Props = {
@@ -15,8 +15,8 @@ export default function RootLayout({ children }: Props) {
   return (
     <>
       <Hero
-        title="Contact Us."
-        sub="Our team of experts would love to chat with you"
+        title="Get in Touch"
+        sub="I’d be happy to hear from you regarding any questions, projects, or collaborations."
       />
       <Sheet>{children}</Sheet>
     </>

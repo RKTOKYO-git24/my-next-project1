@@ -19,7 +19,7 @@ export default async function Page() {
   if (data.contents.length === 0) {
     return (
       <div className={styles.container}>
-        <h1 className={styles.title}>About Us</h1>
+        <h1 className={styles.title}>About</h1>
         <p className={styles.empty}>現在このページは準備中です。</p>
       </div>
     );
@@ -27,7 +27,7 @@ export default async function Page() {
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}> About Us </h1>
+      <h1 className={styles.title}> About</h1>
         <p className={styles.notice}> Coming Soon... (Dummy Data) </p>
       <ul className={styles.list}>
         {data.contents.map((member: any) => {
