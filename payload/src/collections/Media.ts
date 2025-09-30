@@ -5,8 +5,6 @@ import { fileURLToPath } from 'url'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
-const isLocal = process.env.PAYLOAD_ENV === 'local'
-
 export const Media: CollectionConfig = {
   slug: 'media',
   access: {
@@ -20,14 +18,8 @@ export const Media: CollectionConfig = {
     },
   ],
   upload: {
-    // 保存先ディレクトリ（ローカルと本番で分岐）
-    staticDir: isLocal
-      ? path.resolve(dirname, '../../media')
-      : '/payload/media',
-
-    // mimeTypes はそのまま
-    mimeTypes: ['image/*'],
-
+    staticDir: path.resolve(dirname, '../../media'), // 保存先ディレクトリ
+    mimeTypes: ['image/*'], // 画像のみを対象
     imageSizes: [
       {
         name: 'thumbnail',
@@ -42,6 +34,6 @@ export const Media: CollectionConfig = {
         position: 'centre',
       },
     ],
-    adminThumbnail: 'thumbnail',
+    adminThumbnail: 'thumbnail', // 管理画面でのプレビュー用
   },
 }

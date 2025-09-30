@@ -1,18 +1,17 @@
 // /payload/app/src/collections/News.ts
 import type { CollectionConfig, Access, Where } from 'payload';
+import { lexicalEditor } from '@payloadcms/richtext-lexical';
 
 const publicRead: Access = ({ req }) => {
-  // ログイン済みは全件OK
   if (req.user) return true;
 
-  // 未ログインは公開記事のみ
   const where: Where = {
     and: [
       { status:   { equals: 'published' } },
       { category: { not_equals: 'private' } },
     ],
   };
-  return where; // ✅ Where をそのまま返す
+  return where;
 };
 
 export const News: CollectionConfig = {
@@ -21,14 +20,19 @@ export const News: CollectionConfig = {
   admin: { useAsTitle: 'title' },
 
   access: {
-    read: publicRead, // ✅ Access 型の関数を割り当て
+    read: publicRead,
   },
 
   fields: [
     { name: 'title', type: 'text', required: true },
     { name: 'slug', type: 'text', required: true, unique: true },
     { name: 'description', type: 'textarea' },
-    { name: 'category', type: 'select', required: true, defaultValue: 'update', options: [
+    {
+      name: 'category',
+      type: 'select',
+      required: true,
+      defaultValue: 'update',
+      options: [
         { label: 'Technology', value: 'technology' },
         { label: 'Japan',      value: 'japan' },
         { label: 'U.S.A.',     value: 'usa' },
@@ -38,9 +42,14 @@ export const News: CollectionConfig = {
     },
     { name: 'publishedDate', type: 'date' },
     { name: 'excerpt',       type: 'textarea' },
-    { name: 'content',       type: 'richText' },
-    { name: 'externalId',    type: 'text' },
-    { name: 'thumbnail',     type: 'upload', relationTo: 'media', required: true },
+    {
+      name: 'content',
+      type: 'richText',
+      editor: lexicalEditor(),  // ✅ リッチテキスト
+      required: false,
+    },
+    { name: 'externalId', type: 'text' },
+    { name: 'thumbnail', type: 'upload', relationTo: 'media', required: true },
     {
       name: 'status',
       type: 'select',
