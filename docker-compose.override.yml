@@ -1,0 +1,4 @@
+services:
+  nextjs:
+    env_file:
+      - .env.local

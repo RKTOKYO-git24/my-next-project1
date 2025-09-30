@@ -6,7 +6,8 @@ services:
       - "3000:3000"
     # env_file で .env.local を読み込む
     env_file:
-      - .env.local
+      - .env
+    # env.localはローカル以外では不要のため.envに修正(本当はなくてもいい)
     # environment は“値を持つものだけ”を書く（無指定キーは削除）
     environment:
       NODE_ENV: development
