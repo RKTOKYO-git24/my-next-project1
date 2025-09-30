@@ -1,4 +1,4 @@
-# Dockerfile
+# /home/ryotaro/dev/mnp-dw-20250821/Dockerfile
 FROM node:20
 
 WORKDIR /app
