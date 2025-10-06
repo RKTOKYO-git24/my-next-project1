@@ -15,14 +15,14 @@
 
   .nav.open {
     display: block;
-    position: fixed;
-    top: 0;
+    position: absolute; /* ← fixed → absolute に変更 */
+    top: 100%; /* ← headerの下から展開する */
     left: 0;
     right: 0;
-    bottom: 0;
     background-color: var(--color-bg-painted);
     color: var(--color-text-unpainted);
     padding: 24px 16px;
+    z-index: 9999; /* ← sticky header より前に出す */
   }
 
   .items {
@@ -35,11 +35,13 @@
     background: none;
     border: none;
     cursor: pointer;
+    z-index: 10000;
   }
 }
 
 .close {
-  position: absolute;
-  top: 24px;
+  position: fixed;
+  top: 16px;
   right: 16px;
+  z-index: 10001; /* header より前 */
 }

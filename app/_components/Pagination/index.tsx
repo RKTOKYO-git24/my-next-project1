@@ -1,3 +1,4 @@
+// /home/ryotaro/dev/mnp-dw-20250821/app/_components/Pagination/index.tsx
 import { NEWS_LIST_LIMIT } from "@/app/_constants";
 import Link from "next/link";
 import styles from "./index.module.css";

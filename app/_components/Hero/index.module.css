@@ -5,8 +5,10 @@
   justify-content: center;
   background: transparent;
   color: #fff;
-  overflow: hidden;
+  /* overflow: hidden; ← 削除！！ */
+  overflow: visible !important; /* ← sticky対策として明示的に有効化 */
   padding: 48px 0 100px;
+  z-index: 0;
 }
 
 /* 背景画像(.bgimg)の上に乗る黒オーバーレイ */
@@ -16,10 +18,10 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 600px; /* .bgimg/.bgimgWrapper と合わせる */
+  height: 600px;
   background: rgba(0, 0, 0, 0.5);
   z-index: -9;
-  pointer-events: none; 
+  pointer-events: none;
 }
 
 .title {
@@ -37,14 +39,7 @@
   justify-content: center;
 }
 
-.sub::before {
-  content: "";
-  display: block;
-  height: 1px;
-  width: 20px;
-  background-color: var(--color-text-unpainted);
-}
-
+.sub::before,
 .sub::after {
   content: "";
   display: block;
@@ -54,16 +49,13 @@
 }
 
 .bgimg {
-  position: fixed;
+  position: fixed; /* ← fixedじゃないとだめ */
   top: 0;
   left: 0;
   right: 0;
   height: 600px;
   width: 100%;
   object-fit: cover;
-  object-position: right;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  object-position: center;
   z-index: -10;
 }

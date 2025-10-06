@@ -1,221 +1,80 @@
+/* === 📰 記事全体 === */
+.article {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 32px 16px;
+  background: #fff;
+  color: var(--color-text-main);
+}
+
+/* === ヘッダー部分 === */
+.header {
+  margin-bottom: 32px;
+  background: none !important; /* ← グレー背景削除 */
+  position: relative;
+}
+
+/* === タイトル === */
 .title {
-  font-size: 1.5rem;
-  margin-bottom: 10px;
-  text-align: left;
-}
-
-.description {
-  font-size: 0.9rem;
-  color: var(--color-text-sub);
-  margin: 24px 0;
-  text-align: left;
-}
-
-.meta {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  flex-shrink: 1;
-  gap: 24px;
-  margin-bottom: 64px;
-}
-
-.categoryLink {
-  display: flex;
-}
-
-.thumbnail {
-  width: 100%;
-  height: auto;
-  margin-bottom: 64px;
-}
-
-.content *:first-child {
-  margin-top: 0;
-}
-
-.content > h1 {
-  font-size: 2rem;
-  font-weight: bold;
-  border-bottom: 1px solid var(--color-border);
-  margin: 2.8rem 0 1rem;
-}
-
-.content > h2 {
   font-size: 1.6rem;
   font-weight: bold;
-  margin: 2.8em 0 1rem;
+  margin-bottom: 0.8rem;
+  text-align: left;
 }
 
-.content > h3 {
-  font-size: 1.4rem;
-  font-weight: bold;
-  margin: 2.8rem 0 1rem;
+/* === メタ情報（カテゴリ＋日付） === */
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: var(--color-text-sub);
+  font-size: 0.9rem;
+  margin-bottom: 16px;
+  position: relative;
+  z-index: 2;
 }
 
-.content > h4 {
-  font-size: 1.2rem;
-  font-weight: bold;
-  margin: 2.8rem 0 1rem;
-}
-
-.content > h5 {
-  font-size: 1.1rem;
-  font-weight: bold;
-  margin: 2.8rem 0 1rem;
-}
-
-.content > p {
-  margin: 2rem 0 0.5rem;
-  line-height: 2;
-}
-
-.content > pre {
-  overflow-x: auto;
-}
-
-.content pre > code {
-  background-color: var(--color-bg-code);
-  display: block;
-  overflow-x: auto;
-  padding: 16px;
-}
-
-.content div[data-filename]::before {
-  display: inline-block;
-  background-color: var(--color-bg-sub);
-  content: attr(data-filename);
-  margin: 1em 0 0;
-  font-family: menlo, inconsolata, monospace;
-  font-size: 0.8rem;
-  padding: 4px 16px;
-  border-radius: var(--border-radius) var(--border-radius) 0 0;
-}
-
-.content ul,
-.content ol {
-  margin: 0.5rem 0 0.5rem 2rem;
-}
-
-.content > ul,
-.content > ol {
-  margin-top: 2rem;
-  margin-bottom: 2rem;
-}
-
-.content ul > li {
-  list-style: disc;
-}
-
-.content ol > li {
-  list-style: decimal;
-}
-
-.content li {
-  margin: 0.5rem 0;
-}
-
-.content a {
-  text-decoration: underline;
-}
-
-.content > figure > img {
-  max-width: 100%;
-  height: auto;
-  margin: 2rem 0;
-}
-
-.content > strong {
-  font-weight: bold;
-}
-
-.content > blockquote {
-  border-left: 4px solid var(--color-border);
-  padding-left: 1rem;
-  font-style: italic;
-  margin: 2rem 0;
-}
-
-.content > hr {
-  margin: 4rem 0;
-  height: 1px;
-  background-color: var(--color-border);
-  border: none;
-}
-
-.content > table {
+/* === サムネイルエリア === */
+.cover {
+  position: relative;
+  margin-bottom: 32px;
   width: 100%;
-  margin: 2rem 0;
+  height: auto;
+  overflow: hidden;
+  background: transparent !important; /* ← 灰色の原因削除 */
 }
 
-.content > table th {
-  background-color: var(--color-bg-sub);
-  text-align: left;
-  padding: 1rem;
+/* === サムネイル画像 === */
+.image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  display: block;
+  position: relative;
+  z-index: 1;
 }
 
-.content > table td {
-  text-align: left;
-  padding: 1rem;
+/* === 本文 === */
+.body {
+  line-height: 1.8;
+  color: var(--color-text-main);
 }
 
+/* === モバイル調整 === */
 @media (max-width: 640px) {
-  .title {
-    font-size: 1.5rem;
-    margin-bottom: 10px;
+  .article {
+    padding: 16px;
   }
 
-  .description {
-    font-size: 0.9rem;
-    color: var(--color-text-sub);
-    margin: 24px 0 40px;
+  .title {
+    font-size: 1.4rem;
   }
 
   .meta {
-    display: flex;
-    align-items: center;
-    margin-bottom: 40px;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
   }
 
-  .thumbnail {
-    width: 100%;
-    height: auto;
-    margin-bottom: 40px;
-  }
-
-  .content {
-    width: 100%;
-  }
-
-  .content > h1 {
-    font-size: 1.5rem;
-    font-weight: bold;
-    border-bottom: 1px solid var(--color-border);
-    margin: 2.8rem 0 1rem;
-  }
-
-  .content > h2 {
-    font-size: 1.4rem;
-    font-weight: bold;
-    margin: 2.8em 0 1rem;
-  }
-
-  .content > h3 {
-    font-size: 1.3rem;
-    font-weight: bold;
-    margin: 2.8rem 0 1rem;
-  }
-
-  .content > h4 {
-    font-size: 1.2rem;
-    font-weight: bold;
-    margin: 2.8rem 0 1rem;
-  }
-
-  .content > h5 {
-    font-size: 1.1rem;
-    font-weight: bold;
-    margin: 2.8rem 0 1rem;
+  .cover {
+    margin-bottom: 24px;
   }
 }

@@ -4,7 +4,8 @@
   align-items: center;
   justify-content: center;
   color: #fff;
-  overflow: hidden;
+  /* overflow: hidden; ← 削除！ */
+  overflow: visible !important; /* ✅ sticky対応 */
   padding: 200px 0;
 }
 
@@ -15,7 +16,7 @@
   width: 100%;
   height: 600px;
   z-index: -10;
-  overflow: hidden;
+  overflow: hidden; /* ← ここはOK。背景専用なのでstickyに影響しない */
 }
 
 .bgimg {
@@ -77,6 +78,7 @@
 @media (max-width: 640px) {
   .top {
     padding: 120px 16px;
+    overflow: visible !important; /* ✅ 念のためモバイルでも明示 */
   }
 
   .title {

@@ -1,13 +1,13 @@
 .header {
-  position: sticky;
+  position: sticky !important;
   top: 0;
+  z-index: 1000;
+  width: 100%;
   background-color: rgba(0, 0, 0, 0.6);
   padding: 16px 24px 8px;
-  z-index: 1000;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  width: 100%;
+  justify-content: space-between; 
 }
 
 .logoLink {
@@ -21,6 +21,13 @@
 
 @media (max-width: 640px) {
   .header {
+    position: sticky !important; /* ← 念のため再指定 */
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
     padding: 24px 16px 8px;
+    background-color: rgba(0, 0, 0, 0.8); /* スクロール時に透けを抑える */
+    backdrop-filter: blur(8px); /* 任意：モバイルで見やすく */
   }
 }

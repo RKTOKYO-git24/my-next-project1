@@ -5,4 +5,37 @@
   margin: -40px auto 0;
   padding: 80px;
   border-radius: 8px;
+  box-sizing: border-box;
+}
+
+/* =========================================
+   レスポンシブ対応
+   ========================================= */
+
+/* タブレット（1024px以下） */
+@media (max-width: 1024px) {
+  .container {
+    width: 90%;
+    padding: 60px;
+  }
+}
+
+/* スマホ（768px以下） */
+@media (max-width: 768px) {
+  .container {
+    width: 94%;
+    margin-top: -20px;
+    padding: 40px 24px;
+    border-radius: 6px;
+  }
+}
+
+/* 小型スマホ（480px以下） */
+@media (max-width: 480px) {
+  .container {
+    width: 96%;
+    margin-top: -12px;
+    padding: 32px 16px;
+    border-radius: 4px;
+  }
 }
