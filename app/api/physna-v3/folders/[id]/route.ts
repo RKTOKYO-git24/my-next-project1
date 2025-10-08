@@ -1,3 +1,4 @@
+// /home/ryotaro/dev/mnp-dw-20250821/app/api/physna-v3/folders/[id]/route.ts
 import { NextResponse } from "next/server";
 import { physnaFetch } from "@/lib/physna-v3/client";
 

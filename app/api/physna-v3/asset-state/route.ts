@@ -1,15 +1,17 @@
+// /app/api/physna-v3/asset-state/route.ts
 import { NextResponse } from "next/server";
 import { physnaFetch } from "@/lib/physna-v3/client";
 
 /**
- * GET /api/physna-v3/asset-state?folderName=Molex
- *
- * 指定フォルダ名（例: Molex）に属する全アセットの状態をPhysna APIから取得。
- * 返り値は Physna Swagger UI の /assets/state エンドポイントと同じ形式。
+ * GET /api/physna-v3/asset-state
+ * テナント全体、またはフォルダ指定時のアセットステータスを取得
  */
 export async function GET(req: Request) {
   try {
+    const { searchParams } = new URL(req.url);
+    const folderName = searchParams.get("folderName");
     const tenantId = process.env.PHYSNA_V3_TENANT_ID;
+
     if (!tenantId) {
       return NextResponse.json(
         { error: "Missing PHYSNA_V3_TENANT_ID" },
@@ -17,40 +19,36 @@ export async function GET(req: Request) {
       );
     }
 
-    // 🌐 クエリパラメータから folderName を取得
-    const url = new URL(req.url);
-    const folderName = url.searchParams.get("folderName");
+    // ✅ ベースURLをフォルダ指定なしで構築
+    // 例: https://app-api.physna.com/v3/tenants/{tenantId}/assets/state
+    const basePath = `/tenants/${tenantId}/assets/state`;
+    const apiUrl = folderName
+      ? `${basePath}?folderName=${encodeURIComponent(folderName)}`
+      : basePath;
 
-    if (!folderName) {
-      return NextResponse.json(
-        { error: "Missing ?folderName= query parameter" },
-        { status: 400 }
-      );
+    console.log("📡 Fetching asset state:", apiUrl);
+
+    const data = await physnaFetch(apiUrl);
+
+    if (!data || typeof data !== "object") {
+      throw new Error("Unexpected Physna API response structure");
     }
 
-    console.log(`📊 Fetching Physna asset state for folder: ${folderName}`);
-
-    // ✅ Physna公式API呼び出し（フォルダ名を指定）
-    const result = await physnaFetch(
-      `/tenants/${tenantId}/assets/state?folders=${encodeURIComponent(folderName)}`
-    );
-
-    // ✅ 返却データを検証
-    if (!result || typeof result !== "object") {
-      throw new Error("Invalid response from Physna API");
-    }
-
-    // ✅ 成功レスポンス
+    // ✅ 期待されるレスポンス構造:
+    // { indexing, finished, failed, unsupported, "no-3d-data" }
     return NextResponse.json({
-      folder: folderName,
-      ...result,
+      indexing: data.indexing || 0,
+      finished: data.finished || 0,
+      failed: data.failed || 0,
+      unsupported: data.unsupported || 0,
+      "no-3d-data": data["no-3d-data"] || 0,
     });
   } catch (err: any) {
     console.error("❌ Asset state API error:", err);
     return NextResponse.json(
       {
-        error: "Failed to fetch asset states",
-        detail: err.message,
+        error: "Failed to fetch asset state",
+        detail: err?.message || "Unknown error",
       },
       { status: 500 }
     );
