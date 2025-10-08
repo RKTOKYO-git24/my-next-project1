@@ -1,33 +1,34 @@
-// /home/ryotaro/dev/mnp-dw-20250821/app/physna-v3/folder/[id]/page.tsx
-
 "use client";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 
-// パンくずリスト
+// 🧭 パンくずリスト
 function Breadcrumbs({ folderId }: { folderId: string }) {
-  const [crumbs, setCrumbs] = useState<any[]>([]);
+  const [crumbs, setCrumbs] = useState<{ id: string; name: string }[]>([]);
 
   useEffect(() => {
     const fetchBreadcrumbs = async () => {
       let currentId: string | null = folderId;
-      const stack: any[] = [];
+      const stack: { id: string; name: string }[] = [];
 
       try {
         while (currentId) {
           const res = await fetch(`/api/physna-v3/folders/${currentId}`);
           if (!res.ok) break;
           const data = await res.json();
-          stack.unshift(data); // 先頭に追加
+
+          const folderName =
+            data.name || data.folderName || data.label || "(unnamed folder)";
+
+          stack.unshift({ id: data.id, name: folderName });
           currentId = data.parentFolderId || null;
         }
       } catch (e) {
         console.error("Breadcrumb fetch error:", e);
       }
 
-      // Home を先頭に追加
       setCrumbs([{ id: "root", name: "Home" }, ...stack]);
     };
 
@@ -57,6 +58,17 @@ function Breadcrumbs({ folderId }: { folderId: string }) {
   );
 }
 
+// ✅ ステータスタイプ定義
+type AssetStatus = {
+  total: number;
+  indexing: number;
+  finished: number;
+  failed: number;
+  unsupported: number;
+  "no-3d-data": number;
+  other: number;
+};
+
 export default function FolderContentsPage() {
   const params = useParams<{ id: string }>();
   const folderId = params.id;
@@ -66,11 +78,34 @@ export default function FolderContentsPage() {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
+  const [status, setStatus] = useState<AssetStatus>({
+    total: 0,
+    indexing: 0,
+    finished: 0,
+    failed: 0,
+    unsupported: 0,
+    "no-3d-data": 0,
+    other: 0,
+  });
+
+  const [folderName, setFolderName] = useState<string>("");
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
+        // ✅ フォルダ詳細を取得（folderName取得用）
+        const folderRes = await fetch(`/api/physna-v3/folders/${folderId}`);
+        const folderData = await folderRes.json();
+        const name =
+          folderData.name ||
+          folderData.folderName ||
+          folderData.displayName ||
+          folderData.label ||
+          "(unknown)";
+        setFolderName(name);
+
+        // ✅ フォルダの中身を取得（サブフォルダ＋アセット）
         const res = await fetch(
           `/api/physna-v3/folders/${folderId}/contents?page=${page}`
         );
@@ -87,12 +122,38 @@ export default function FolderContentsPage() {
         setFolders(folderItems);
         setAssets(assetItems);
         setHasMore(page < (data.pageData?.lastPage || 1));
+
+        // 🛠 修正ポイント①:
+        // フォルダ全体のAsset StatusをPhysnaのassets/state APIから取得する
+        const statusRes = await fetch(
+          `/api/physna-v3/asset-state?folderName=${encodeURIComponent(name)}`
+        );
+        if (statusRes.ok) {
+          const sdata = await statusRes.json();
+          setStatus({
+            total:
+              (sdata.indexing || 0) +
+              (sdata.finished || 0) +
+              (sdata.failed || 0) +
+              (sdata.unsupported || 0) +
+              (sdata["no-3d-data"] || 0),
+            indexing: sdata.indexing || 0,
+            finished: sdata.finished || 0,
+            failed: sdata.failed || 0,
+            unsupported: sdata.unsupported || 0,
+            "no-3d-data": sdata["no-3d-data"] || 0,
+            other: 0,
+          });
+        } else {
+          console.warn("Failed to fetch asset-state");
+        }
       } catch (err) {
-        console.error(err);
+        console.error("❌ fetchData error:", err);
       } finally {
         setLoading(false);
       }
     };
+
     fetchData();
   }, [folderId, page]);
 
@@ -100,14 +161,32 @@ export default function FolderContentsPage() {
 
   return (
     <main className="p-6">
-      {/* パンくずリスト */}
       <Breadcrumbs folderId={folderId} />
 
       <h1 className="text-xl font-bold mb-4">Folder Contents</h1>
 
-      {/* フォルダ一覧 */}
+      {/* 📊 Asset Status */}
+      {/* 🛠 修正ポイント②: ここで全アセットの正しい統計を表示 */}
+      <section className="mb-6">
+        <h2 className="text-lg font-semibold mb-2">📊 Asset Status</h2>
+        <div className="p-3 bg-gray-50 border rounded-lg shadow-sm">
+          <p>Total Assets: {status.total}</p>
+          <ul className="mt-2 list-disc ml-5 text-sm space-y-1">
+            <li className="text-yellow-700">🟡 Indexing: {status.indexing}</li>
+            <li className="text-green-700">🟢 Finished: {status.finished}</li>
+            <li className="text-red-700">🔴 Failed: {status.failed}</li>
+            <li className="text-gray-700">⚪ Unsupported: {status.unsupported}</li>
+            <li className="text-gray-500">
+              ⚫ No-3d-data: {status["no-3d-data"]}
+            </li>
+            <li className="text-blue-700">🔵 Other: {status.other}</li>
+          </ul>
+        </div>
+      </section>
+
+      {/* 📂 フォルダ一覧 */}
       <section className="mb-8">
-        <h2 className="text-lg font-semibold mb-2">📂 Folders</h2>
+        <h2 className="text-lg font-semibold mb-2">📂 Subfolders</h2>
         {folders.length === 0 ? (
           <p>No subfolders found.</p>
         ) : (
@@ -132,7 +211,7 @@ export default function FolderContentsPage() {
         )}
       </section>
 
-      {/* アセット一覧 */}
+      {/* 📄 アセット一覧 */}
       <section>
         <h2 className="text-lg font-semibold mb-2">📄 Assets</h2>
         {assets.length === 0 ? (
@@ -153,15 +232,17 @@ export default function FolderContentsPage() {
                       className="w-full h-40 object-contain mb-2 bg-gray-100"
                     />
                   </Link>
+
                   <Link
                     href={detailUrl}
                     className="font-medium break-words mb-1"
                   >
                     {asset.name || asset.path?.split("/").pop()}
                   </Link>
+
                   <div className="text-sm text-gray-600 mb-2">
                     {asset.isAssembly && <span className="mr-2">🔧 ASM</span>}
-                    状態: {asset.state}
+                    STATUS: {asset.state}
                   </div>
                 </div>
               );
@@ -170,7 +251,7 @@ export default function FolderContentsPage() {
         )}
       </section>
 
-      {/* ページネーション */}
+      {/* 🔁 ページネーション */}
       <div className="flex justify-between mt-6">
         <button
           disabled={page === 1}
