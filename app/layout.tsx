@@ -7,6 +7,7 @@ import { Analytics } from "@vercel/analytics/next";
 import type { Metadata } from "next";
 import Header from "./_components/Header";
 import Footer from "./_components/Footer";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.ryotkim.com/"),
@@ -47,8 +48,10 @@ export default function RootLayout({
         <Header />
         {children}
         <Footer />
-        <Analytics />
-        <GoogleAnalytics gaId="1SVCPQJ5D7" />
+        {/* --- Analytics セクション --- */}
+        <Analytics /> {/* ✅ Vercel Analytics */}
+        <SpeedInsights />
+        <GoogleAnalytics gaId="1SVCPQJ5D7" /> {/* ✅ GA4 */}
       </body>
     </html>
   );
