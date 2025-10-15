@@ -4,10 +4,10 @@ import "./globals.css";
 import React from "react";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import Header from "./_components/Header";
 import Footer from "./_components/Footer";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.ryotkim.com/"),
@@ -51,7 +51,7 @@ export default function RootLayout({
         {/* --- Analytics セクション --- */}
         <Analytics /> {/* ✅ Vercel Analytics */}
         <SpeedInsights />
-        <GoogleAnalytics gaId="1SVCPQJ5D7" /> {/* ✅ GA4 */}
+        <GoogleAnalytics gaId="G-1SVCPQJ5D7" /> {/* ✅ GA4 */}
       </body>
     </html>
   );
