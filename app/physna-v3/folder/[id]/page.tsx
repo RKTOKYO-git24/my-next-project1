@@ -235,15 +235,16 @@ export default function FolderContentsPage() {
 
                   <Link
                     href={detailUrl}
-                    className="font-medium break-words mb-1"
+                    className="text-sm text-gray-700 font-mono mb-1"
                   >
                     {asset.name || asset.path?.split("/").pop()}
                   </Link>
 
-                  <div className="text-sm text-gray-600 mb-2">
+                  <div className="text-sm text-gray-700 font-mono mb-1">
                     {asset.isAssembly && <span className="mr-2">🔧 ASM</span>}
                     STATUS: {asset.state}
                   </div>
+                  <p className="text-sm text-gray-700 font-mono mb-1">ID: {asset.id}</p>
                 </div>
               );
             })}
