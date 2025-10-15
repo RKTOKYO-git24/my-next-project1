@@ -1,12 +1,10 @@
-// /home/ryotaro/dev/mnp-dw-20250821/app/layout.tsx
-
 import "./globals.css";
 import React from "react";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
-import Header from "./_components/Header";
+import ConditionalHeader from "./_components/ConditionalHeader";
 import Footer from "./_components/Footer";
 
 export const metadata: Metadata = {
@@ -45,13 +43,13 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body>
-        <Header />
+        <ConditionalHeader /> {/* ✅ Headerを動的に出し分け */}
         {children}
         <Footer />
         {/* --- Analytics セクション --- */}
-        <Analytics /> {/* ✅ Vercel Analytics */}
+        <Analytics />
         <SpeedInsights />
-        <GoogleAnalytics gaId="G-1SVCPQJ5D7" /> {/* ✅ GA4 */}
+        <GoogleAnalytics gaId="G-1SVCPQJ5D7" />
       </body>
     </html>
   );
