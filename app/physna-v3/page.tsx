@@ -78,7 +78,7 @@ export default function PhysnaBrowserPage() {
 
   return (
     <main className="p-6 space-y-8">
-      <h1 className="text-xl font-bold mb-4">Physna v3 Browser (Home)</h1>
+      <h1 className="text-xl font-bold mb-4">Demo for SOLIZE 3D SEARCH powered by Physna</h1>
 
       {/* 📊 Tenant全体ステータス */}
       <section className="bg-gray-50 p-4 rounded-lg border shadow-sm">

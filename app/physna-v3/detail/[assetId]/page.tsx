@@ -50,7 +50,7 @@ export default function PhysnaAssetDetailPage() {
       <h1 className="text-lg font-bold">{asset.name || asset.path}</h1>
       <p className="text-sm text-gray-600">UUID (API): {asset.id}</p>
       <p className="text-sm text-gray-600">UUID (URL): {assetId}</p>
-      <p className="text-sm text-gray-600">状態: {asset.state}</p>
+      <p className="text-sm text-gray-600">STATUS: {asset.state}</p>
 
       <button
         onClick={() =>

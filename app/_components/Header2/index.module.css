@@ -7,18 +7,23 @@
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  padding: 0 1.5rem;
+  padding: 16px 24px 8px;
 
-  /* 🟦 半透明・濃紺背景（Docker風） */
-  background: rgba(8, 25, 60, 0.95); /* ← 透け感を復活！ */
+  /* 🟦 半透明・濃紺背景 */
+  background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px); /* Safari対応 */
+  -webkit-backdrop-filter: blur(10px);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
 
   z-index: 100;
 }
 
-/* ロゴ */
+/* 🟩 下のコンテンツが隠れないようにするための余白 */
+.spacer {
+  height: 60px; /* ヘッダーと同じ高さ */
+  width: 100%;
+}
+
 .logo {
   height: 40px;
   width: auto;
