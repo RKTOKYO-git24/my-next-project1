@@ -1,4 +1,5 @@
 import "@/app/globals.css";
+import Header2 from "@/app/_components/Header2"; // 🟩 ヘッダーを明示的に読み込み
 
 export const metadata = {
   title: "Physna v3 Browser",
@@ -12,8 +13,11 @@ export default function PhysnaLayout({
   return (
     <html lang="ja">
       <body>
-        {/* ❌ Header2 は削除！ ConditionalHeaderが出す */}
-        <main>{children}</main>
+        {/* 🟦 固定ヘッダー */}
+        <Header2 />
+
+        {/* 🟩 ヘッダー高さぶん（約60px）の余白を確保 */}
+        <main className="pt-16">{children}</main>
       </body>
     </html>
   );

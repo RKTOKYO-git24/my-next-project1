@@ -35,3 +35,24 @@
 .logo:hover {
   transform: scale(1.04);
 }
+
+/* ✅ 追加ここから */
+.rightArea {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+
+.uploadIcon {
+  height: 32px;
+  width: 32px;
+  cursor: pointer;
+  opacity: 0.85;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.uploadIcon:hover {
+  opacity: 1;
+  transform: scale(1.08);
+}
+/* ✅ 追加ここまで */

@@ -163,7 +163,7 @@ export default function FolderContentsPage() {
     <main className="p-6">
       <Breadcrumbs folderId={folderId} />
 
-      <h1 className="text-xl font-bold mb-4">Demo for SOLIZE 3D SEARCH powered by Physna</h1>
+      <h1 className="text-xl font-bold mb-4">SOLIZE 3D Search Demo</h1>
 
       {/* 📊 Asset Status */}
       {/* 🛠 修正ポイント②: ここで全アセットの正しい統計を表示 */}
