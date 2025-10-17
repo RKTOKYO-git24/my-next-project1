@@ -1,11 +1,10 @@
-"use client";
+// "use client" は不要
 
-// ⚠️ この関数は純粋なAPI呼び出し専用。
-// router は使わない。呼び出し元（Header2）でハンドリングする。
-export default async function VisualSearch(file: File) {
+export default async function runVisualSearch(file: File): Promise<any> {
   const allowedTypes = ["image/jpeg", "image/png", "image/gif"];
   if (!allowedTypes.includes(file.type)) {
-    throw new Error("対応形式は .jpg / .jpeg / .png / .gif のみです。");
+    alert("Only .jpg, .jpeg, .png, .gif formats are supported.");
+    return null;
   }
 
   const formData = new FormData();
@@ -17,9 +16,10 @@ export default async function VisualSearch(file: File) {
   });
 
   if (!res.ok) {
-    throw new Error(`Upload failed: ${res.status}`);
+    console.error("❌ Upload failed:", res.status);
+    alert("Upload failed.");
+    return null;
   }
 
-  const data = await res.json();
-  return data;
+  return await res.json();
 }
